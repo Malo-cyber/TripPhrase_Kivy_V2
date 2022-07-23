@@ -1,0 +1,59 @@
+HomeScreen:
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        MDToolbar:
+            title : 'Trip Phrase'
+    
+        MDBottomNavigation:
+            #color stuff
+            #panel_color: 0,0,1,1
+
+            MDBottomNavigationItem:
+                name: 'screen 1'
+                text: "Buy"
+                icon: 'shopping'
+                MDLabel : 
+                    text : 'Buy'
+
+            MDBottomNavigationItem:
+                name: 'screen 2'
+                text: "Learn"
+                icon: 'briefcase'
+                MDLabel : 
+                    text : 'Learn'
+
+            MDBottomNavigationItem:
+                name: 'home'
+                text: "Home"
+                icon: 'home'
+                ScrollView:
+                    CountryList:
+ 
+                    
+            MDBottomNavigationItem:
+                name: 'screen 4'
+                text: "List"
+                icon: 'format-list-bulleted'
+                MDLabel : 
+                    text : 'List'
+                            
+
+            MDBottomNavigationItem:
+                name: 'screen 5'
+                text: "setting"
+                icon: 'cog-outline'
+                MDLabel : 
+                    text : 'setting'
+
+<CountryList>:
+    cols : 3
+    size_hint_y : None
+    size_hint_x : 1
+    height : self.minimum_height
+    width : self.minimum_width
+    spacing : "20dp"
+
+<ButtonLang>:
+    on_press : root.callback()
+
