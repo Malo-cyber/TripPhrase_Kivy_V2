@@ -3,6 +3,7 @@ HomeScreen:
         orientation: 'vertical'
 
         MDToolbar:
+            id : tool_bar
             title : 'Trip Phrase'
     
         MDBottomNavigation:
@@ -35,8 +36,13 @@ HomeScreen:
                 name: 'screen 4'
                 text: "List"
                 icon: 'format-list-bulleted'
-                MDLabel : 
-                    text : 'List'
+                
+                ScrollView:
+                    scroll_distance : 200
+                    PhraseList:
+                        id : phrase_list
+                
+                        
                             
 
             MDBottomNavigationItem:
@@ -57,3 +63,19 @@ HomeScreen:
 <ButtonLang>:
     on_press : root.callback()
 
+<PhraseList>:
+    cols : 2
+    size_hint_y : None
+    size_hint_x : 1
+    height : self.minimum_height
+    width : self.minimum_width
+    spacing : "20dp"
+
+<ButtonPhrase>:
+    on_press : root.callback()
+
+<ButtonContext>:
+    on_press : self.parent.context_callback(self.text)
+
+<ReturnButton>:
+    on_press : self.parent.retour_callback()
