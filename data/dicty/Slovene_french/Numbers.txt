@@ -1,0 +1,39 @@
+Ena
+Dva
+Tri
+Štiri
+Pet
+Šest
+Sedem
+Osem
+Devet
+Deset
+Enajst
+Dvanajst
+Trinajst
+Štirinajst
+Petnajst
+Šestnajst
+Sedemnajst
+Osemnajst
+Devetnajst
+Dvajset
+30. Trideset
+40. Štirideset
+50. Petdeset
+60. Sestdeset
+70. Sedemdeset
+80. 0semdeset
+90. Devetdeset
+100. Sto
+200. Dvesto
+300. Tristo
+400. Štiristo
+500. Petsto
+600. Šesto
+700. Sedemsto
+800. 0semsto
+900. Devesto
+1000. Tisoč
+2000. Dva tisoč
+3000. Tri tisoč

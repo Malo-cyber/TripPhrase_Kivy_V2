@@ -1,0 +1,57 @@
+Lahko še eno : Encore une autre
+Isto : la même chose
+Lahko kruh : Est-ce qu’on pourrait avoir du pain ?
+Lahko račun : Est-ce que je peux avoir l’addition ?
+Lahko plačamo : Est-ce que nous pouvons payer ?
+En kozarec vode, prosim : Un verre d’eau s’il vous plait
+En vrč vode, prosim : Un pichet d’eau s’il vous plait
+Radenska : de l’eau pétillante
+Navadna voda : eau (naturelle)
+Voda iz pipe : eau du robinet
+az bi limonado : Je vais prendre une limonada (eau citronnée)
+Jaz bi kavo : Je vais prendre un café
+Jaz bi sok : Je vais prendre un jus
+Lahko račun prosim : Est-ce que je peux avoir l’addition
+Kava : café
+Kava z mlekom : café au lait
+Kava s smetano : café crème
+Capučino : Cappuccino
+Bela kava : grand café au lait
+Machiatto : Machiatto
+Expresso : Expresso
+Turška kava : Café turc
+Pivo : bière
+Svetlo pivo : bière blonde
+Temno pivo : bière brune
+Veliko pivo : grande bière (0.5L)
+Majhno pivo : petite bière (0,3L)
+Union pivo : Bière Union
+Laško pivo : Bière Laško
+Kakao : chocolat chaud
+Vroča čokolda : « danette » chaude
+Čaj : thé
+Kuhano vino : vin chaud
+Radenska : eau pétillante
+Voda : eau
+Sok : jus
+Jabolčni sok : jus de pomme
+Pomarančni sok : jus d’orange
+Cokta : « Coca-Cola  yougoslave »
+Limonada : eau avec du citron
+Vino : vin
+Belo vino :  vin blanc
+Rdeče vino : vin rouge
+1 dc : 1 dcl
+En kozarec : un verre
+Borovničke : alcool à base de myrtilles
+Slivovka : alcool fort à base de prunes
+Viljamovka : alcool fort à base de poires
+Zajtrk : petit-déjeuner
+Kosilo : menu du midi
+Malica : menu midi composé d’un plat
+Večerja : dîner
+Predjed : entrée
+Juha : soupe
+Glavna jed : plat principal
+Solata : salade
+Sladica : dessert

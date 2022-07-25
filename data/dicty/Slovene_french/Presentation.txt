@@ -1,0 +1,28 @@
+Kaj delaš ? : Qu’est-ce que tu fais dans la vie ?
+Kako ti je ime ? : Comment t’appelles-tu ?
+Iz kje si ? : D’où viens-tu ?
+Rad te imam : Je t’aime (si vous êtes un homme)
+Rada te imam : Je t’aime (si vous êtes une femme)
+Všeč si me : Tu me plais
+Ti si zelo lepa : Tu es très belle
+Ti si zelo lep : Tu es très beau
+Mi daš številko ?: Tu me donnes ton numéro ?
+Greva na kavo ?: On va prendre un café ?
+Greva na sprehod ?: On va se promener ?
+Dober dan, Jaz sem Oscar : Bonjour, je suis Oscar.
+Jaz sem Francoz : Je suis français.
+Me veseli : enchanté
+Kaj ste po poklicu ?: Quelle est votre profession ?
+Jaz sem iz Francije : Je viens de France.
+Jaz sem prvič tukaj. : Je suis pour la première fois ici.
+Si ti Igor ? : Es-tu Igor?
+Si ti Petra ? : Es-tu Petra?
+Govorim angleško : Je parle anglais
+Gorvorim slovensko : Je parle slovène
+Govorim malo slovensko : Je parle un peu slovène.
+Ali govorite angleško ?: Est-ce que vous parlez anglais?
+Ali govorite nemško ?: Est-ce que vous parlez allemand?
+Ali govorite francosko ?: Est-ce que vous parlez français?
+Ne razumen : Je ne comprends pas
+Me razumeš ?: Tu me comprends ?
+Me razumete ?: Vous me comprenez ?

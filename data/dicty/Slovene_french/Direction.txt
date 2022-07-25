@@ -1,0 +1,19 @@
+Mi lahko pomagate ? : Est-ce que vous pouvez m’aider
+Kam ? : (Quelle direction)
+Kam naj grem ? : Où dois-je aller ?
+Kam gremo ? : Où allons-nous ?
+Kje ? : Où ?
+Kje je to ? : Où c’est ?
+Kje je pot ? : Où est le chemin?
+Kje je avtobusna poštaja ? : Où est la gare routière ?
+Kje je želežniška postaja ? : Où est la gare ferroviaire?
+Eno karto do Bleda : Un ticket jusqu’à Bled
+Eno karto do Bohinja : Un ticket jusqu’à Bohinj
+Je tu prosto ? : Est-ce que la place est libre?
+Je še daleč do Bleda ? : C’est encore loin bled ?
+Ni daleč : Ce n’est pas loin.
+Daleč je : C’est loin.
+Blizu je : C’est proche.
+Na levo : A gauche
+Na desno : A droite .
+Naravnost : Tout droit.

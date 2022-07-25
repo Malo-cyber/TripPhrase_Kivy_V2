@@ -1,0 +1,8 @@
+Da/Ja : Oui
+Ne : Non
+Prosim : S’il vous plait
+Hvala : Merci
+Hvala lepa : Merci beaucoup
+Ni za kaj : De rien
+Oprostite : Pardon
+Full dober ! Super bien !

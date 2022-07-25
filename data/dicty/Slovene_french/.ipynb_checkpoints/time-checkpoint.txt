@@ -1,0 +1,37 @@
+Včeraj : Hier
+Danes : Aujourd’hui
+Jutri : Demain
+Koliko je ura ? : Quelle heure est-il ?
+anuar – januarja : Janvier – en janvier
+februar – februarja : Février – en février
+marec – marca : mars – en mars
+april – aprila : avril – en avril
+maj – maja : mai – en mai
+junij – junija : juin – en juin
+julij – julija : juillet – en juillet
+avgust – avgusta : août – en août
+september – septembra : septembre – en septembre
+oktober – oktobra : octore – en octobre
+november – novembra : novembre – en novembre
+december – decembra : décembre – en décembre
+lani : l’année dernière
+prejšnji mesec : le mois dernier
+letos : cette année
+ta mesec : ce mois-ci
+drugo leto : l’année prochaine
+drugi mesec : le mois prochain
+pomlad : printemps
+spomladi : au printemps
+poletje : été
+poleti : en été
+jesen : automne
+jeseni : en automne
+zima : hiver
+pozimi : en hiver
+Ponedeljek : Lundi
+Torek : mardi
+Sreda : mercredi
+Četertek : jeudi
+Petek : Vendredi
+Sobota : Samedi
+Nedelja : Dimanche

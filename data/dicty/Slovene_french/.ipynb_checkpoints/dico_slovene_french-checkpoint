@@ -1,0 +1,202 @@
+,src,trg,ctxt
+0,Včeraj,Hier,time
+1,Danes,Aujourd’hui,time
+2,Jutri,Demain,time
+3,Koliko je ura ?,Quelle heure est-il ?,time
+4,anuar – januarja,Janvier – en janvier,time
+5,februar – februarja,Février – en février,time
+6,marec – marca,mars – en mars,time
+7,april – aprila,avril – en avril,time
+8,maj – maja,mai – en mai,time
+9,junij – junija,juin – en juin,time
+10,julij – julija,juillet – en juillet,time
+11,avgust – avgusta,août – en août,time
+12,september – septembra,septembre – en septembre,time
+13,oktober – oktobra,octore – en octobre,time
+14,november – novembra,novembre – en novembre,time
+15,december – decembra,décembre – en décembre,time
+16,lani,l’année dernière,time
+17,prejšnji mesec,le mois dernier,time
+18,letos,cette année,time
+19,ta mesec,ce mois-ci,time
+20,drugo leto,l’année prochaine,time
+21,drugi mesec,le mois prochain,time
+22,pomlad,printemps,time
+23,spomladi,au printemps,time
+24,poletje,été,time
+25,poleti,en été,time
+26,jesen,automne,time
+27,jeseni,en automne,time
+28,zima,hiver,time
+29,pozimi,en hiver,time
+30,Ponedeljek,Lundi,time
+31,Torek,mardi,time
+32,Sreda,mercredi,time
+33,Četertek,jeudi,time
+34,Petek,Vendredi,time
+35,Sobota,Samedi,time
+36,Nedelja,Dimanche,time
+0,Da/Ja,Oui,Remerciement
+1,Ne,Non,Remerciement
+2,Prosim,S’il vous plait,Remerciement
+3,Hvala,Merci,Remerciement
+4,Hvala lepa,Merci beaucoup,Remerciement
+5,Ni za kaj,De rien,Remerciement
+6,Oprostite,Pardon,Remerciement
+7,Full dober ! Super bien !,,Remerciement
+0,Mi lahko pomagate ?,Est-ce que vous pouvez m’aider,Direction
+1,Kam ?,(Quelle direction),Direction
+2,Kam naj grem ?,Où dois-je aller ?,Direction
+3,Kam gremo ?,Où allons-nous ?,Direction
+4,Kje ?,Où ?,Direction
+5,Kje je to ?,Où c’est ?,Direction
+6,Kje je pot ?,Où est le chemin?,Direction
+7,Kje je avtobusna poštaja ?,Où est la gare routière ?,Direction
+8,Kje je želežniška postaja ?,Où est la gare ferroviaire?,Direction
+9,Eno karto do Bleda,Un ticket jusqu’à Bled,Direction
+10,Eno karto do Bohinja,Un ticket jusqu’à Bohinj,Direction
+11,Je tu prosto ?,Est-ce que la place est libre?,Direction
+12,Je še daleč do Bleda ?,C’est encore loin bled ?,Direction
+13,Ni daleč,Ce n’est pas loin.,Direction
+14,Daleč je,C’est loin.,Direction
+15,Blizu je,C’est proche.,Direction
+16,Na levo,A gauche,Direction
+17,Na desno,A droite .,Direction
+18,Naravnost,Tout droit.,Direction
+0,Ena,,Numbers
+1,Dva,,Numbers
+2,Tri,,Numbers
+3,Štiri,,Numbers
+4,Pet,,Numbers
+5,Šest,,Numbers
+6,Sedem,,Numbers
+7,Osem,,Numbers
+8,Devet,,Numbers
+9,Deset,,Numbers
+10,Enajst,,Numbers
+11,Dvanajst,,Numbers
+12,Trinajst,,Numbers
+13,Štirinajst,,Numbers
+14,Petnajst,,Numbers
+15,Šestnajst,,Numbers
+16,Sedemnajst,,Numbers
+17,Osemnajst,,Numbers
+18,Devetnajst,,Numbers
+19,Dvajset,,Numbers
+20,30. Trideset,,Numbers
+21,40. Štirideset,,Numbers
+22,50. Petdeset,,Numbers
+23,60. Sestdeset,,Numbers
+24,70. Sedemdeset,,Numbers
+25,80. 0semdeset,,Numbers
+26,90. Devetdeset,,Numbers
+27,100. Sto,,Numbers
+28,200. Dvesto,,Numbers
+29,300. Tristo,,Numbers
+30,400. Štiristo,,Numbers
+31,500. Petsto,,Numbers
+32,600. Šesto,,Numbers
+33,700. Sedemsto,,Numbers
+34,800. 0semsto,,Numbers
+35,900. Devesto,,Numbers
+36,1000. Tisoč,,Numbers
+37,2000. Dva tisoč,,Numbers
+38,3000. Tri tisoč,,Numbers
+0,Dober dan,Bonjour,Salutation
+1,Dobro jutro,Bonne matinée,Salutation
+2,Dober večer,Bonsoir,Salutation
+3,Živjo,Salut,Salutation
+4,Zdravo,Salut,Salutation
+5,Nasvidenje,Au revoir,Salutation
+6,Adijo,Au revoir,Salutation
+7,Lahko noč,Bonne nuit,Salutation
+8,Oprostite,Pardon (interpeler dans la rue),Salutation
+9,"Živjo, kako si ?","salut, comment ça va ?",Salutation
+10,"Dobro, hvala. Pa ti ?","Bien, merci. Et toi ?",Salutation
+11,"V redu, (pa) ti ?","Bien, et toi ?",Salutation
+12,Tudi Dobro,(moi) aussi Bien.,Salutation
+0,Kaj delaš ?,Qu’est-ce que tu fais dans la vie ?,Presentation
+1,Kako ti je ime ?,Comment t’appelles-tu ?,Presentation
+2,Iz kje si ?,D’où viens-tu ?,Presentation
+3,Rad te imam,Je t’aime (si vous êtes un homme),Presentation
+4,Rada te imam,Je t’aime (si vous êtes une femme),Presentation
+5,Všeč si me,Tu me plais,Presentation
+6,Ti si zelo lepa,Tu es très belle,Presentation
+7,Ti si zelo lep,Tu es très beau,Presentation
+8,Mi daš številko ?,Tu me donnes ton numéro ?,Presentation
+9,Greva na kavo ?,On va prendre un café ?,Presentation
+10,Greva na sprehod ?,On va se promener ?,Presentation
+11,"Dober dan, Jaz sem Oscar","Bonjour, je suis Oscar.",Presentation
+12,Jaz sem Francoz,Je suis français.,Presentation
+13,Me veseli,enchanté,Presentation
+14,Kaj ste po poklicu ?,Quelle est votre profession ?,Presentation
+15,Jaz sem iz Francije,Je viens de France.,Presentation
+16,Jaz sem prvič tukaj.,Je suis pour la première fois ici.,Presentation
+17,Si ti Igor ?,Es-tu Igor?,Presentation
+18,Si ti Petra ?,Es-tu Petra?,Presentation
+19,Govorim angleško,Je parle anglais,Presentation
+20,Gorvorim slovensko,Je parle slovène,Presentation
+21,Govorim malo slovensko,Je parle un peu slovène.,Presentation
+22,Ali govorite angleško ?,Est-ce que vous parlez anglais?,Presentation
+23,Ali govorite nemško ?,Est-ce que vous parlez allemand?,Presentation
+24,Ali govorite francosko ?,Est-ce que vous parlez français?,Presentation
+25,Ne razumen,Je ne comprends pas,Presentation
+26,Me razumeš ?,Tu me comprends ?,Presentation
+27,Me razumete ?,Vous me comprenez ?,Presentation
+0,Lahko še eno,Encore une autre,Restaurant_bar
+1,Isto,la même chose,Restaurant_bar
+2,Lahko kruh,Est-ce qu’on pourrait avoir du pain ?,Restaurant_bar
+3,Lahko račun,Est-ce que je peux avoir l’addition ?,Restaurant_bar
+4,Lahko plačamo,Est-ce que nous pouvons payer ?,Restaurant_bar
+5,"En kozarec vode, prosim",Un verre d’eau s’il vous plait,Restaurant_bar
+6,"En vrč vode, prosim",Un pichet d’eau s’il vous plait,Restaurant_bar
+7,Radenska,de l’eau pétillante,Restaurant_bar
+8,Navadna voda,eau (naturelle),Restaurant_bar
+9,Voda iz pipe,eau du robinet,Restaurant_bar
+10,az bi limonado,Je vais prendre une limonada (eau citronnée),Restaurant_bar
+11,Jaz bi kavo,Je vais prendre un café,Restaurant_bar
+12,Jaz bi sok,Je vais prendre un jus,Restaurant_bar
+13,Lahko račun prosim,Est-ce que je peux avoir l’addition,Restaurant_bar
+14,Kava,café,Restaurant_bar
+15,Kava z mlekom,café au lait,Restaurant_bar
+16,Kava s smetano,café crème,Restaurant_bar
+17,Capučino,Cappuccino,Restaurant_bar
+18,Bela kava,grand café au lait,Restaurant_bar
+19,Machiatto,Machiatto,Restaurant_bar
+20,Expresso,Expresso,Restaurant_bar
+21,Turška kava,Café turc,Restaurant_bar
+22,Pivo,bière,Restaurant_bar
+23,Svetlo pivo,bière blonde,Restaurant_bar
+24,Temno pivo,bière brune,Restaurant_bar
+25,Veliko pivo,grande bière (0.5L),Restaurant_bar
+26,Majhno pivo,"petite bière (0,3L)",Restaurant_bar
+27,Union pivo,Bière Union,Restaurant_bar
+28,Laško pivo,Bière Laško,Restaurant_bar
+29,Kakao,chocolat chaud,Restaurant_bar
+30,Vroča čokolda,« danette » chaude,Restaurant_bar
+31,Čaj,thé,Restaurant_bar
+32,Kuhano vino,vin chaud,Restaurant_bar
+33,Radenska,eau pétillante,Restaurant_bar
+34,Voda,eau,Restaurant_bar
+35,Sok,jus,Restaurant_bar
+36,Jabolčni sok,jus de pomme,Restaurant_bar
+37,Pomarančni sok,jus d’orange,Restaurant_bar
+38,Cokta,« Coca-Cola  yougoslave »,Restaurant_bar
+39,Limonada,eau avec du citron,Restaurant_bar
+40,Vino,vin,Restaurant_bar
+41,Belo vino,vin blanc,Restaurant_bar
+42,Rdeče vino,vin rouge,Restaurant_bar
+43,1 dc,1 dcl,Restaurant_bar
+44,En kozarec,un verre,Restaurant_bar
+45,Borovničke,alcool à base de myrtilles,Restaurant_bar
+46,Slivovka,alcool fort à base de prunes,Restaurant_bar
+47,Viljamovka,alcool fort à base de poires,Restaurant_bar
+48,Zajtrk,petit-déjeuner,Restaurant_bar
+49,Kosilo,menu du midi,Restaurant_bar
+50,Malica,menu midi composé d’un plat,Restaurant_bar
+51,Večerja,dîner,Restaurant_bar
+52,Predjed,entrée,Restaurant_bar
+53,Juha,soupe,Restaurant_bar
+54,Glavna jed,plat principal,Restaurant_bar
+55,Solata,salade,Restaurant_bar
+56,Sladica,dessert,Restaurant_bar
