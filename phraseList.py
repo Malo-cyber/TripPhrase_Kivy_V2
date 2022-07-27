@@ -12,6 +12,7 @@ class PhraseList(MDList):
     def context_callback(self, text):
         self.clear()
         self.gen_listItem(text)
+       
         
     def retour_callback(self):
         self.clear()
@@ -35,6 +36,7 @@ class PhraseList(MDList):
             )
         self.add_widget(retourButton)
         for phrase in phrase_list:
+            print(f'probleme : {phrase.content}')
             phrase.get_trad('Slovenian')
             phrase_button = ButtonPhrase(
                 text = phrase.content,

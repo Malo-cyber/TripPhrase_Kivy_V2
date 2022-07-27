@@ -1,8 +1,14 @@
 
-import sqlite3
+
 import json as js
+from context_manager import SQLite
+import sqlite3
+
+DATAFILE = r"./data/datasqlite3.db"
+
 
 class Traduction():
+
     def __init__(self, **kwargs):
         self.trad_count = 0
         self.trad = ''
@@ -10,21 +16,14 @@ class Traduction():
         if len(kwargs) == 1:
             for key, value in kwargs.items():
                     setattr(self, key, value)
-            try:
-                conn = sqlite3.connect(r"./data/datasqlite3.db")
-                cur = conn.cursor()
-                #chercher la liste des traductions disponible
-                result = cur.execute(f"""
+            with SQLite(file_name=DATAFILE) as cursor:
+                result = cursor.execute(f"""
                     SELECT * FROM traduction
                     WHERE rowid = {self.trad_id}
                 """).fetchone()
                 for e in result:
                     self.trad_count = result[0]
                     self.trad = result[1]
-            except Exception as err:
-                print('Traduction retreive from database failed: \nError: %s' % (str(err)))
-            finally:
-                conn.close()
 
     def get_trad(self, lang):
         trad_avail = js.loads(self.trad)
@@ -41,34 +40,20 @@ class Traduction():
             new_trad = '{' + current_trad + ',' + trad_to_add + '}'
 
         self.trad = new_trad
-        try:
-            conn = sqlite3.connect(r"./data/datasqlite3.db")
-            cur = conn.cursor()
-            cur.execute(f"""
+        
+        with SQLite(file_name=DATAFILE) as cursor:
+            cursor.execute(f"""
                 UPDATE traduction 
                 SET trad_list = '{self.trad}', trad_count = {self.trad_count}
                 WHERE rowid = {self.trad_id}
                 """)
-            conn.commit()
-            conn.close()
-        except Exception as err:
-            print('Query Failed: \nError: %s' % (str(err)))
-        finally:
-            conn.close()
-
+        
 
     def save_trad(self):
-        try:
-            conn = sqlite3.connect(r"./data/datasqlite3.db")
-            cur = conn.cursor()
-            cur.execute(f'INSERT INTO traduction VALUES ({self.trad_count},"{self.trad}");')
-            conn.commit()
-            self.trad_id = cur.execute('select last_insert_rowid()').fetchone()[0]
-            conn.close()
-        except Exception as err:
-            print('Query Failed in save_trad: \nError: %s' % (str(err)))
-        finally:
-            conn.close()
+        with SQLite(file_name=DATAFILE) as cursor:
+            cursor.execute(f'INSERT INTO traduction VALUES ({self.trad_count},"{self.trad}");')
+            self.trad_id = cursor.execute('select last_insert_rowid()').fetchone()[0]
+            pass
         
 
 class Phrase():
@@ -80,11 +65,9 @@ class Phrase():
         for key, value in kwargs.items():
                 setattr(self, key, value)
         if self.phrase_id != '':
-            try:
-                conn = sqlite3.connect(r"./data/datasqlite3.db")
-                cur = conn.cursor()
+            with SQLite(file_name=DATAFILE) as cursor:
                 #chercher la liste des traductions disponible
-                result = cur.execute(f"""
+                result = cursor.execute(f"""
                     SELECT * FROM phrase
                     WHERE rowid = {self.phrase_id}
                 """).fetchone()
@@ -92,29 +75,23 @@ class Phrase():
                 self.content = result[1]
                 self.context = result[2]
                 self.trad_id = result[3]
-            except Exception as err:
-                print('Traduction retreive from database failed: \nError: %s' % (str(err)))
-            finally:
-                conn.close()
+                
+           
 
     def phrase_save(self):
-        try:
-            conn = sqlite3.connect(r"./data/datasqlite3.db")
-            cur = conn.cursor()
-            cur.execute('INSERT INTO phrase VALUES (:lang,:content,:context,:trad_id)',
-                {
-                    'lang' : self.lang,
-                    'content' : self.content,
-                    'context' : self.context,
-                    'trad_id' : self.trad_id
-                }
-            )
-            conn.commit()
-            self.phrase_id = cur.execute('select last_insert_rowid()').fetchone()[0]
-        except Exception as err:
-            print('Query Failed: \nError: %s' % (str(err)))
-        finally:
-            conn.close()
+        with SQLite(file_name=DATAFILE) as cursor:
+            #chercher la liste des traductions disponible
+            cursor.execute('INSERT INTO phrase VALUES (:lang,:content,:context,:trad_id)',
+            {
+                'lang' : self.lang,
+                'content' : self.content,
+                'context' : self.context,
+                'trad_id' : self.trad_id
+            })
+        
+            self.phrase_id = cursor.execute('select last_insert_rowid()').fetchone()[0]
+                
+            
 
     def get_trad(self, lang):
         trad = Traduction(trad_id = self.trad_id)

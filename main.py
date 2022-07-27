@@ -5,14 +5,14 @@ from kivymd.uix.list import OneLineListItem, MDList, OneLineIconListItem,TwoLine
 from kivymd.uix.label import MDLabel
 from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.button import MDIconButton
-import sqlite3
-from sqlite3 import Error
-import pandas as pd
+
 import json as js
 from dataclass import Traduction, Phrase
 import phraseList
-import importer
+from importer import Importer
+from context_manager import SQLite
 
+DATAFILE = r"./data/datasqlite3.db"
 FLAG_PATH = '/Users/malorycouvet/programmation/Projects/TripPhrase_Kivy_V2/content/country_icon'
 
 sql_create_phrase_table = """CREATE TABLE IF NOT EXISTS phrase (
@@ -30,22 +30,10 @@ sql_create_traduction_table = """CREATE TABLE IF NOT EXISTS traduction (
 
 sql_get_last_trad_id = "SELECT * FROM traduction ORDER BY column DESC LIMIT 1;"
 
-try:
-    conn = sqlite3.connect(r"./data/datasqlite3.db")
-    print('DB connected')
-    cur = conn.cursor()
+with SQLite(file_name=DATAFILE) as cur:
     cur.execute(sql_create_phrase_table)
     cur.execute(sql_create_traduction_table)
-    conn.commit()
-    conn.close()
-
-except Exception as err:
-    print('Query Failed: \nError: %s' % (str(err)))
-finally:
-    conn.close()
-print('Tables created')
-            
-
+   
 class CountryList(MDList):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -84,8 +72,9 @@ class MainApp(MDApp):
         return HomeScreen()
 
     def on_start(self):
-        pass
-       
+
+        importer = Importer('./data/dicty/Slovene_french', 'Slovenian', 'French')
+        importer.create_instance()
     
     def callback(self):
         print(self.txt)

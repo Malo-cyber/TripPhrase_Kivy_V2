@@ -6,6 +6,7 @@ class Importer:
         self.path = path
         self.lang_src = lang_src
         self.lang_trg = lang_trg
+      
 
     def read_data(self):
         import os
