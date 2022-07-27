@@ -31,17 +31,21 @@ class PhraseList(MDList):
     
     def gen_listItem(self, context):
         phrase_list = self.get_context_lang_phrase_list(context, 'French')
+
         retourButton = ReturnButton(
                 text = 'retour'
             )
         self.add_widget(retourButton)
+
         for phrase in phrase_list:
-            print(f'probleme : {phrase.content}')
-            phrase.get_trad('Slovenian')
+            traduction = phrase.get_trad('English')
             phrase_button = ButtonPhrase(
                 text = phrase.content,
-                secondary_text = phrase.get_trad('Slovenian').content
+                secondary_text = phrase.get_trad('English').content
             )
+            if traduction.phrase_id :
+                del traduction
+        
             self.add_widget(phrase_button)
         retourButton = ReturnButton(
             text = 'retour'
@@ -53,20 +57,10 @@ class PhraseList(MDList):
 
     def get_context_lang_phrase_list(self, context, lang):
         phrase_list = []
-        try:
-            conn = sqlite3.connect(r"./data/datasqlite3.db")
-            cur = conn.cursor()
-            result = cur.execute(f"""
-                SELECT * FROM phrase
-                WHERE context = '{context}' AND lang = '{lang}'
-            """).fetchall()
-            for e in result:
-                phrase = Phrase(lang = e[0], content = e[1], context = e[2], trad_id = e[3] )
+        for phrase in Phrase :
+            if (phrase.context == context) & (phrase.lang == lang):
                 phrase_list.append(phrase)
-        except Exception as err:
-            print('Query Failed in get-context-lang-phrase: \nError: %s' % (str(err)))
-        finally:
-            conn.close()
+            
         return phrase_list
 
 

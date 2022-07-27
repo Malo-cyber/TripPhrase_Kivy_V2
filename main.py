@@ -1,16 +1,18 @@
+import json as js
+
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.list import OneLineListItem, MDList, OneLineIconListItem,TwoLineListItem, ImageLeftWidget
-from kivymd.uix.label import MDLabel
-from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.button import MDIconButton
+from kivymd.uix.gridlayout import MDGridLayout
+from kivymd.uix.label import MDLabel
+from kivymd.uix.list import (ImageLeftWidget, MDList, OneLineIconListItem,
+                             OneLineListItem, TwoLineListItem)
 
-import json as js
-from dataclass import Traduction, Phrase
 import phraseList
-from importer import Importer
 from context_manager import SQLite
+from dataclass import Phrase, Traduction
+from importer import Importer
 
 DATAFILE = r"./data/datasqlite3.db"
 FLAG_PATH = '/Users/malorycouvet/programmation/Projects/TripPhrase_Kivy_V2/content/country_icon'
@@ -72,9 +74,16 @@ class MainApp(MDApp):
         return HomeScreen()
 
     def on_start(self):
+        self.load_database()
+        
 
-        importer = Importer('./data/dicty/Slovene_french', 'Slovenian', 'French')
-        importer.create_instance()
+    def load_database(self):
+        """ Load and instanciate all Dataclass object from database collection"""
+        
+        #call the method DBall from dataclass to load data from database
+        Phrase.DBall()
+        Traduction.DBall()
+        
     
     def callback(self):
         print(self.txt)

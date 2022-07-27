@@ -6,30 +6,43 @@ import sqlite3
 
 DATAFILE = r"./data/datasqlite3.db"
 
+class IterTrad(type):
+    def __iter__(cls):
+        return iter(cls._allTrad)
 
-class Traduction():
+class Traduction(metaclass=IterTrad):
+    _allTrad  = []
+
+    @classmethod
+    def DBall(cls):
+        """Load data from database and instanciates all objects"""
+        with SQLite(file_name=DATAFILE) as cur:
+            result = cur.execute("""
+                SELECT rowid, trad_count, trad_list FROM traduction
+            """).fetchall()
+            for e in result:
+                trad = Traduction(trad_id = e[0], trad_count = e[1], trad = e[2])
 
     def __init__(self, **kwargs):
+
+        self._allTrad.append(self)
         self.trad_count = 0
         self.trad = ''
         self.trad_id = 0
-        if len(kwargs) == 1:
-            for key, value in kwargs.items():
-                    setattr(self, key, value)
-            with SQLite(file_name=DATAFILE) as cursor:
-                result = cursor.execute(f"""
-                    SELECT * FROM traduction
-                    WHERE rowid = {self.trad_id}
-                """).fetchone()
-                for e in result:
-                    self.trad_count = result[0]
-                    self.trad = result[1]
+
+        for key, value in kwargs.items():
+                setattr(self, key, value)
 
     def get_trad(self, lang):
+        """if avail return phrase instance in the language demands """
         trad_avail = js.loads(self.trad)
-        trad_phrase = Phrase(phrase_id = trad_avail[lang])
-        return trad_phrase
-        
+        try:
+            for phrase in Phrase :
+                if phrase.phrase_id == trad_avail[lang] : 
+                    return phrase
+        except:
+            return Phrase(content = 'Error - Traduction unavailable', lang = lang, context = phrase.context)
+
     def add_trad(self, phrase):
         self.trad_count = self.trad_count + 1
         current_trad = self.trad.replace('{', '').replace('}', '')
@@ -48,22 +61,45 @@ class Traduction():
                 WHERE rowid = {self.trad_id}
                 """)
         
-
     def save_trad(self):
         with SQLite(file_name=DATAFILE) as cursor:
             cursor.execute(f'INSERT INTO traduction VALUES ({self.trad_count},"{self.trad}");')
             self.trad_id = cursor.execute('select last_insert_rowid()').fetchone()[0]
             pass
         
+class IterPhrase(type):
+    def __iter__(cls):
+        return iter(cls._allPhrase)
 
-class Phrase():
+class Phrase(metaclass=IterPhrase):
 
-    phrase_id = ''
-    trad_id = ''
+    _allPhrase = []
+
 
     def __init__(self, **kwargs):
+
+        self._allPhrase.append(self)
+
+        self.phrase_id = ''
+        self.trad_id = ''
+
         for key, value in kwargs.items():
                 setattr(self, key, value)
+
+    @classmethod
+    def DBall(cls):
+        """Load data from database and instanciates all objects"""
+        with SQLite(file_name=DATAFILE) as cur:
+            result = cur.execute("""
+                SELECT rowid, lang, content, context, trad_id FROM phrase
+            """).fetchall()
+            for e in result:
+                phrase = Phrase(phrase_id = e[0], lang = e[1], content = e[2], context = e[3], trad_id = e[4])
+
+
+
+    def load_from_db(self):
+
         if self.phrase_id != '':
             with SQLite(file_name=DATAFILE) as cursor:
                 #chercher la liste des traductions disponible
@@ -94,6 +130,10 @@ class Phrase():
             
 
     def get_trad(self, lang):
-        trad = Traduction(trad_id = self.trad_id)
-        return trad.get_trad(lang)    
+        for trad in Traduction : 
+            if trad.trad_id == self.trad_id:
+                return trad.get_trad(lang)
 
+if __name__ == '__main__':
+
+    pass
