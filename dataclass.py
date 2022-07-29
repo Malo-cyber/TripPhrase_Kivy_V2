@@ -6,6 +6,22 @@ import sqlite3
 
 DATAFILE = r"./data/datasqlite3.db"
 
+class User():
+   
+    def __init__(self, **kwargs):
+
+        self.username = ''
+        self.password = ''
+        self.email = ''
+        self.lang = ''
+        self.favorite = ''
+        self.current_lang = ''
+
+        for key, value in kwargs.items():
+                setattr(self, key, value)
+    
+    
+
 class IterTrad(type):
     def __iter__(cls):
         return iter(cls._allTrad)
@@ -67,6 +83,7 @@ class Traduction(metaclass=IterTrad):
             self.trad_id = cursor.execute('select last_insert_rowid()').fetchone()[0]
             pass
         
+
 class IterPhrase(type):
     def __iter__(cls):
         return iter(cls._allPhrase)
@@ -74,7 +91,6 @@ class IterPhrase(type):
 class Phrase(metaclass=IterPhrase):
 
     _allPhrase = []
-
 
     def __init__(self, **kwargs):
 
@@ -111,8 +127,7 @@ class Phrase(metaclass=IterPhrase):
                 self.content = result[1]
                 self.context = result[2]
                 self.trad_id = result[3]
-                
-           
+                  
 
     def phrase_save(self):
         with SQLite(file_name=DATAFILE) as cursor:

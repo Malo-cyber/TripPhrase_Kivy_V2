@@ -1,4 +1,231 @@
-HomeScreen:
+ScreenManager:
+    LoginScreen:
+        name: 'login'
+    HomeScreen:
+        name: 'home'
+    SignInScreen:
+        name: 'signin'
+    ProfilScreen:
+        name: 'profil'
+    SelectLangPopUp:
+        name: 'langpopup'
+
+<ProfilScreen>:
+    MDCard:
+        size_hint: None, None
+        size: 1000, 1000
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDLabel:
+            id: register
+            text: " Final Settings "
+            font_size: 40
+            halign: 'center'
+            size_hint_y: 0.2
+            height: self.texture_size[1]
+            padding_y: 5
+
+        MDRaisedButton:
+            id: lang_button
+            text: "Select your born Language"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: root.lang.open()
+
+        MDRoundFlatButton:
+            text: "FINISH"
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            on_press: root.submit()
+       
+
+<SignInScreen>:
+    MDCard:
+        size_hint: None, None
+        size: 1000, 1000
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDLabel:
+            id: register
+            text: "Register your informations "
+            font_size: 40
+            halign: 'center'
+            size_hint_y: 0.2
+            height: self.texture_size[1]
+            padding_y: 5
+
+        MDTextField:
+            id: username
+            mode : 'round'
+            multiline: False
+            hint_text: "username"
+            icon_right: "account"
+            size_hint_x: None
+            width: 550
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            write_tab: False
+
+        MDTextField:
+            id: email
+            mode : 'round'
+            multiline: False
+            hint_text: "email"
+            icon_right: "email"
+            size_hint_x: None
+            width: 550
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            write_tab: False
+
+        MDTextField:
+            id: password1
+            mode : 'round'
+            multiline: False
+            hint_text: "password"
+            icon_right: "eye-off"
+            size_hint_x: None
+            width: 550
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            password: True
+            write_tab: False
+            error_color : 'red'
+            
+
+
+        MDTextField:
+            id: password2
+            mode : 'round'
+            multiline: False
+            hint_text: "type again your password"
+            icon_right: "eye-off"
+            size_hint_x: None
+            width: 550
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            password: True
+            write_tab: False
+            error_color : 'red'
+            
+
+        MDRoundFlatButton:
+            text: "NEXT"
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            on_press: root.submit()
+
+
+        Widget:
+            size_hint_y: None
+            height: 10  
+
+
+<LoginScreen>:
+    MDCard:
+        size_hint: None, None
+        size: 500, 800
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDLabel:
+            id: welcome_label
+            text: "WELCOME"
+            font_size: 40
+            halign: 'center'
+            size_hint_y: 0.5
+            height: self.texture_size[1]
+            padding_y: 30
+
+        MDTextField:
+            id: email
+            mode : 'round'
+            hint_text: "email adress"
+            icon_right: "account"
+            size_hint_x: None
+            width: 400
+            font_size: 18
+            pos_hint: {"center_x": 0.5}
+            write_tab: False
+            error_color : 'red'
+
+        MDTextField:
+            id: password
+            mode : 'round'
+            hint_text: "password"
+            icon_right: "eye-off"
+            size_hint_x: None
+            width: 400
+            font_size: 18
+            pos_hint: {"center_x": 0.5}
+            password: True
+            write_tab: False
+            error_color : 'red'
+            
+
+        MDRoundFlatButton:
+            text: "LOG IN"
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            on_press: root.submit()
+            
+        MDRoundFlatButton:
+            text: "SIGN IN"
+            font_size: 20
+            pos_hint: {"center_x": 0.5}    
+            on_press :
+                root.manager.transition.direction = 'left'
+                root.manager.transition.duration = 1
+                root.manager.current = 'signin'   
+
+        Widget:
+            size_hint_y: None
+            height: 10
+
+<SelectLangPopUp>:
+    MDCard:
+        size_hint: None, None
+        size: 500, 800
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDLabel:
+            id: lang_select
+            text: " Language of traduction selection "
+            font_size: 40
+            halign: 'center'
+            size_hint_y: 0.2
+            height: self.texture_size[1]
+            padding_y: 5
+
+        MDRaisedButton:
+            id: lang_button_select
+            text: "Select your traduction language"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: root.lang.open()
+
+        
+        MDRoundFlatButton:
+            text: "SELECT"
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            on_press: root.submit()
+
+<HomeScreen>:
+
     MDBoxLayout:
         orientation: 'vertical'
 
@@ -25,11 +252,9 @@ HomeScreen:
                     text : 'Learn'
 
             MDBottomNavigationItem:
-                name: 'home'
+                name: 'Home'
                 text: "Home"
                 icon: 'home'
-                ScrollView:
-                    CountryList:
  
                     
             MDBottomNavigationItem:
@@ -39,26 +264,22 @@ HomeScreen:
                 
                 ScrollView:
                     scroll_distance : 200
-                    PhraseList:
-                        id : phrase_list
+                    id: scroll_view
                 
-                        
-                            
-
+            
             MDBottomNavigationItem:
                 name: 'screen 5'
                 text: "setting"
                 icon: 'cog-outline'
                 MDLabel : 
                     text : 'setting'
+                MDIconButton:
+                    icon : 'account'
+                    on_press : 
+                        root.manager.transition.direction = 'left'
+                        root.manager.transition.duration = 1
+                        root.manager.current = 'login'
 
-<CountryList>:
-    cols : 3
-    size_hint_y : None
-    size_hint_x : 1
-    height : self.minimum_height
-    width : self.minimum_width
-    spacing : "20dp"
 
 <ButtonLang>:
     on_press : root.callback()
@@ -79,3 +300,4 @@ HomeScreen:
 
 <ReturnButton>:
     on_press : self.parent.retour_callback()
+
