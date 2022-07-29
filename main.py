@@ -208,8 +208,11 @@ class MainApp(MDApp):
         return sm
 
     def on_start(self):
-        self.load_database()
+        #remove '#' on the next two line to load exemple data
+        #import = Importer(r'./data/dicty/Slovene_french/', 'Slovene', 'French')
+        #import.create_instance()
 
+        self.load_database()
 
         
 
