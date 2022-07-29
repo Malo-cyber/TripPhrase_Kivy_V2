@@ -3,16 +3,14 @@ from ast import IsNot
 from kivymd.uix.list import OneLineListItem, MDList, TwoLineListItem
 import sqlite3
 from dataclass import Traduction, Phrase
-
-
+from db import Context, Phrase, User, Lang
 
 class PhraseList(MDList):
 
-    def __init__(self, lang_src,lang_trg, avail_context, **kwargs):
+    def __init__(self, lang_src,lang_trg, **kwargs):
         super().__init__(**kwargs)
         self.lang_src = lang_src
         self.lang_trg = lang_trg
-        self.avail_context = avail_context
 
         for key, value in kwargs.items():
                 setattr(self, key, value)
@@ -33,12 +31,12 @@ class PhraseList(MDList):
         self.clear_widgets()
     
     def gen_contextItems(self):
-        for cont in self.avail_context:
+        for cont in Context.all():
             list_item = ButtonContext(
-                text = cont
+                text = cont.context
             )
-            self.add_widget(list_item)
-    
+            #self.add_widget(list_item)
+            print(cont.context)
     def gen_listItem(self):
         phrase_list = self.get_context_lang_phrase_list(self.current_context, self.lang_src)
 
@@ -84,3 +82,7 @@ class ReturnButton(OneLineListItem):
 class ButtonPhrase(TwoLineListItem):
     def callback(self):
         print(f'{self.text}')
+
+if __name__ == '__main__':
+    for cont in Context.all():
+        print(cont.context)

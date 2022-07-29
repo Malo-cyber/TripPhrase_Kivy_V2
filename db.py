@@ -50,14 +50,17 @@ class Lang(Base):
     def get_lang_id(cls, lang):
         Session = sessionmaker(bind=engine)
         session = Session()
-        return session.query(Lang.id).filter(Lang.lang == lang)
+        result = session.query(Lang).filter(Lang.lang == lang)
+        for r in result:
+            return r.id
 
     @classmethod
     def get_lang_by_id(cls, lang_id):
         Session = sessionmaker(bind=engine)
         session = Session()
-        return session.query(Lang.lang).filter(Lang.id == lang_id)
-
+        result = session.query(Lang.lang).filter(Lang.id == lang_id)
+        for r in result:
+            return r.lang
 
 class Context(Base):
 
@@ -65,14 +68,14 @@ class Context(Base):
 
     id = Column(Integer, primary_key = True)
     context = Column(String)
-    prhase = relationship("Phrase")
+    phrase = relationship("Phrase")
 
     def __init__(self, id, context):
         self.id = id
         self.context = context
 
     def __repr__(self):
-        return f"Lang(id={self.id!r}, lang={self.lang!r})"
+        return f"Context(id={self.id!r}, context={self.context!r})"
 
     def save(self):
         Session = sessionmaker(bind=engine)
@@ -80,13 +83,28 @@ class Context(Base):
         session.add(self)
         session.commit()
 
-    def get_context_id(self):
-        return self.id
+    @classmethod
+    def get_context_id(cls, cont):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        result = session.query(Context).filter(Context.context == cont)
+        for r in result:
+            return r.id
 
     @classmethod
-    def get_context_by_id(self):
-        
-        return session.query(Context.context).filter(Context.id == cont_id)
+    def get_context_by_id(cls, id):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        result = session.query(Context).filter(Context.id == id)
+        for r in result:
+            return r.context
+
+    @classmethod
+    def all(cls):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        result = session.query(Context).all()
+        return result
 
 
 
@@ -126,6 +144,13 @@ class Phrase(Base):
         )
     
     def get_trad(self, lang):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        lang_id = Lang.get_lang_id(lang)
+        return session.query(Phrase).filter(Phrase.trad_id == self.trad_id and Phrase.lang_id == lang_id )
+
+    @classmethod
+    def get_context_lang_phrase_list(cls, context, lang):
         Session = sessionmaker(bind=engine)
         session = Session()
         lang_id = Lang.get_lang_id(lang)
@@ -200,8 +225,17 @@ if __name__ == '__main__':
 
     create_instance()"""
 
+    """result = Context.get_context_by_id(id = 3)
+    print(result)
+    result = Context.get_context_id('Remerciement')
+    print(result)"""
     
-    
+    """Session = sessionmaker(bind=engine)
+    session = Session()
+    for r in session.query(Phrase).all():
+        print(r)"""
 
-    for cont in Context.get_context_id('Salutation').fetchone()
+    """for cont in Context.all():
+        print(cont)"""
+
      
