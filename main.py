@@ -21,6 +21,7 @@ DATAFILE = r"./data/datasqlite3.db"
 FLAG_PATH = '/Users/malorycouvet/programmation/Projects/TripPhrase_Kivy_V2/content/country_icon'
 
 avail_context = ['Salutation','Restaurant_bar','Remerciement','Presentation','Direction','time','Numbers']
+
 avail_lang = ['English', 'French', 'Slovenian','Croatian', 'Italian', 'Hungarian', 'Deutch', 'Finish']
 
 sql_create_phrase_table = """CREATE TABLE IF NOT EXISTS phrase (

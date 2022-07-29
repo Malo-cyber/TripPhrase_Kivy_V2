@@ -84,17 +84,11 @@ class Traduction(metaclass=IterTrad):
             pass
         
 
-class IterPhrase(type):
-    def __iter__(cls):
-        return iter(cls._allPhrase)
 
-class Phrase(metaclass=IterPhrase):
 
-    _allPhrase = []
+class Phrase():
 
     def __init__(self, **kwargs):
-
-        self._allPhrase.append(self)
 
         self.phrase_id = ''
         self.trad_id = ''
