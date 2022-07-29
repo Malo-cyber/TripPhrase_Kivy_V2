@@ -16,6 +16,7 @@ from importer import Importer
 from authenticator import Authenticator
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.card import MDCard
+from importer import Importer
 
 DATAFILE = r"./data/datasqlite3.db"
 FLAG_PATH = '/Users/malorycouvet/programmation/Projects/TripPhrase_Kivy_V2/content/country_icon'
@@ -54,32 +55,31 @@ with SQLite(file_name=DATAFILE) as cur:
     cur.execute(sql_create_users_table)
 
 class HomeScreen(Screen):
-    on_enter_count = 0
+    
 
     def on_enter(self, *args):
-        if self.on_enter_count == 0 : 
+        self.update()
+        
 
-            login_label = MDLabel(
-                text = f" Welcome {Authenticator.user.username}",
-                valign = 'center'
+    def update(self):
+        if Authenticator.isAuthenticate:    
+            self.ids.logged.text = f" Welcome {Authenticator.user.username}"
+            self.ids.trad_lang.text = f"{Authenticator.user.current_lang}"
+
+        if Authenticator.user.current_lang != '' :
+            phraseList = PhraseList(
+                lang_src = Authenticator.user.lang,
+                lang_trg = Authenticator.user.current_lang,
+                avail_context = avail_context
             )
-            self.ids.tool_bar.add_widget(login_label)
-            self.on_enter_count += 1
+            self.ids.scroll_view.clear_widgets()
+            self.ids.scroll_view.add_widget(phraseList)
+        else : 
+            self.manager.current = 'langpopup'
 
-            if Authenticator.user.current_lang != '' :
-                phraseList = PhraseList(
-                    lang_src = Authenticator.user.lang,
-                    lang_trg = Authenticator.user.current_lang,
-                    avail_context = avail_context
-                )
-                self.ids.scroll_view.add_widget(phraseList)
-                self.on_enter_count += 1
-                
-            else : 
-                self.manager.current = 'langpopup'
 
     def select_lang_trg(self):
-        self.add_widget(SelectLangPopUp())
+        self.manager.current = 'langpopup'
             
     def callback(self, txt):
         pass
@@ -209,8 +209,8 @@ class MainApp(MDApp):
     def on_start(self):
 
         #remove '#' on the next two line to load exemple data
-        #import = Importer(r'./data/dicty/Slovene_french/', 'Slovene', 'French')
-        #import.create_instance()
+        #importer = Importer(r'./data/dicty/Slovene_french/', 'Slovenian', 'French')
+        #importer.create_instance()
 
         self.load_database()
 
