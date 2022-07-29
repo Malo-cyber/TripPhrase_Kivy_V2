@@ -187,7 +187,6 @@ class LoginScreen(Screen):
     def sign_in_callback():
         pass
         
-    
 
 class MainApp(MDApp):
 
@@ -208,6 +207,7 @@ class MainApp(MDApp):
         return sm
 
     def on_start(self):
+
         #remove '#' on the next two line to load exemple data
         #import = Importer(r'./data/dicty/Slovene_french/', 'Slovene', 'French')
         #import.create_instance()
