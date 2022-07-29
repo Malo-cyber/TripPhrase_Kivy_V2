@@ -105,23 +105,10 @@ class Phrase():
             """).fetchall()
             for e in result:
                 phrase = Phrase(phrase_id = e[0], lang = e[1], content = e[2], context = e[3], trad_id = e[4])
+    
+    def set_tradId(self):
+        pass
 
-
-
-    def load_from_db(self):
-
-        if self.phrase_id != '':
-            with SQLite(file_name=DATAFILE) as cursor:
-                #chercher la liste des traductions disponible
-                result = cursor.execute(f"""
-                    SELECT * FROM phrase
-                    WHERE rowid = {self.phrase_id}
-                """).fetchone()
-                self.lang = result[0]
-                self.content = result[1]
-                self.context = result[2]
-                self.trad_id = result[3]
-                  
 
     def phrase_save(self):
         with SQLite(file_name=DATAFILE) as cursor:
