@@ -1,2 +1,3 @@
 env/
 data/datasqlite3.db
+__pycache__/
