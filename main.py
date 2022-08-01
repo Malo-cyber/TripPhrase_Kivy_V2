@@ -2,33 +2,17 @@ import json as js
 
 from kivy.lang import Builder
 from kivymd.app import MDApp
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.button import MDIconButton
-from kivymd.uix.gridlayout import MDGridLayout
-from kivymd.uix.label import MDLabel
-from kivymd.uix.list import ImageLeftWidget, MDList
 from phraseList import PhraseList
 from kivy.uix.screenmanager import Screen, ScreenManager
-import phraseList
-from context_manager import SQLite
-from dataclass import Phrase, Traduction, User
 from importer import Importer
 from authenticator import Authenticator
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.card import MDCard
-from importer import Importer
-from db import Context, Phrase, User, Lang
 
-DATAFILE = r"./data/datasqlite3.db"
-FLAG_PATH = '/Users/malorycouvet/programmation/Projects/TripPhrase_Kivy_V2/content/country_icon'
-
-avail_context = ['Salutation','Restaurant_bar','Remerciement','Presentation','Direction','time','Numbers']
-
-avail_lang = ['English', 'French', 'Slovenian','Croatian', 'Italian', 'Hungarian', 'Deutch', 'Finish']
+from dbclass import db_session, User, Phrase, Lang
 
 
-sql_get_last_trad_id = "SELECT * FROM traduction ORDER BY column DESC LIMIT 1;"
-
+db_url = """sqlite+pysqlite:///data/dbclass.sqlite"""
 
 class HomeScreen(Screen):
     
@@ -38,20 +22,21 @@ class HomeScreen(Screen):
         
 
     def update(self):
-        if Authenticator.isAuthenticate:    
-            self.ids.logged.text = f" Welcome {Authenticator.get_user_name()}"
-            lang = Authenticator.get_user_currlang()
-            self.ids.trad_lang.text = f"{Lang.get_lang_by_id(lang)}"
+        if Authenticator.isAuthenticate:
+            with db_session(db_url) as session:    
+                self.ids.logged.text = f" Welcome {Authenticator.get_user_name(session)}"
+                lang = Authenticator.get_user_currlang(session)
+                self.ids.trad_lang.text = f"{lang}"
 
-        if Authenticator.user.current_lang != '' :
-            phraseList = PhraseList(
-                lang_src = Authenticator.user.lang,
-                lang_trg = Authenticator.user.current_lang,
-            )
-            self.ids.scroll_view.clear_widgets()
-            self.ids.scroll_view.add_widget(phraseList)
-        else : 
-            self.manager.current = 'langpopup'
+                if Authenticator.get_user_currlang(session) != None :
+                    phraseList = PhraseList(
+                        lang_src = Authenticator.user.lang_id,
+                        lang_trg = Authenticator.user.currlang_id,
+                    )
+                    self.ids.scroll_view.clear_widgets()
+                    self.ids.scroll_view.add_widget(phraseList)
+                else : 
+                    self.manager.current = 'langpopup'
 
     def select_lang_trg(self):
         self.manager.current = 'langpopup'
@@ -62,13 +47,14 @@ class HomeScreen(Screen):
 class SelectLangPopUp(Screen):
 
     def on_enter(self, **kwargs):
-        self.lang_items = [
-            {
-                "text": f"{lang.lang}",
-                "viewclass": "OneLineListItem",
-                "on_release": lambda x= f"{lang.lang}" : self.lang_callback(x),
-            } for lang in Lang.all()
-        ]
+        with db_session(db_url) as session:
+            self.lang_items = [
+                {
+                    "text": f"{lang.lang}",
+                    "viewclass": "OneLineListItem",
+                    "on_release": lambda x= f"{lang.lang}" : self.lang_callback(x),
+                } for lang in Lang.all(session)
+            ]
 
         self.lang = MDDropdownMenu(
             caller = self.ids.lang_button_select,
@@ -81,9 +67,10 @@ class SelectLangPopUp(Screen):
         self.lang.dismiss()
 
 
-    def submit(self):     
-        Authenticator.update_curlang(self.ids.lang_button_select.text)
-        self.manager.current = 'home'
+    def submit(self):  
+        with db_session(db_url) as session:   
+            Authenticator.update_curlang(self.ids.lang_button_select.text, session)
+            self.manager.current = 'home'
 
 
 class SignInScreen(Screen):
@@ -99,27 +86,28 @@ class SignInScreen(Screen):
         username = self.ids.username.text
         password = self.ids.password1.text
 
-
-        if Authenticator.check_email(email):
-            self.ids.email.error = True
-            self.ids.email.hint_text = 'email already use'
-        else : 
-            user = User(username,email, password)
-            Authenticator.save_user(user)
-            self.manager.current = 'profil'
+        with db_session(db_url) as session:
+            if Authenticator.check_email(email, session):
+                self.ids.email.error = True
+                self.ids.email.hint_text = 'email already use'
+            else : 
+                user = User(username,password, email)
+                Authenticator.save_user(user, session)
+                self.manager.current = 'profil'
             
 
 
 class ProfilScreen(Screen):
 
     def on_enter(self, *args):
-        self.lang_items = [
-            {
-                "text": f"{lang.lang}",
-                "viewclass": "OneLineListItem",
-                "on_release": lambda x= f"{lang.lang}" : self.lang_callback(x),
-            } for lang in Lang.all()
-        ]
+        with db_session(db_url) as session:
+            self.lang_items = [
+                {
+                    "text": f"{lang.lang}",
+                    "viewclass": "OneLineListItem",
+                    "on_release": lambda x= f"{lang.lang}" : self.lang_callback(x),
+                } for lang in Lang.all(session)
+            ]
 
         self.lang = MDDropdownMenu(
                 caller = self.ids.lang_button,
@@ -132,9 +120,10 @@ class ProfilScreen(Screen):
         self.lang.dismiss()
 
 
-    def submit(self):     
-        Authenticator.update_lang(self.ids.lang_button.text)
-        self.manager.current = 'home'
+    def submit(self):    
+        with db_session(db_url) as session: 
+            Authenticator.update_lang(self.ids.lang_button.text, session)
+            self.manager.current = 'home'
     
 
 class LoginScreen(Screen):
@@ -143,13 +132,14 @@ class LoginScreen(Screen):
         email = self.ids.email.text
         password = self.ids.password.text
         
-        if Authenticator.load_user(email, password):
-            self.manager.current = 'home'
-        else : 
-            self.ids.email.error = True
-            self.ids.email.text = 'wrong email or password'
-            self.ids.password.error = True
-            self.ids.password.text = 'wrong email or password'
+        with db_session(db_url) as session:
+            if Authenticator.load_user(email, password, session):
+                self.manager.current = 'home'
+            else : 
+                self.ids.email.error = True
+                self.ids.email.hint_text = 'wrong email or password'
+                self.ids.password.error = True
+                self.ids.password.hint_text = 'wrong email or password'
             
 
     def login_callback(self):
@@ -185,10 +175,8 @@ class MainApp(MDApp):
     def on_start(self):
 
         #remove '#' on the next two line to load exemple data
-        #importer = Importer(r'./data/dicty/Slovene_french/', 'Slovenian', 'French')
-        #importer.create_instance()
-
-        self.load_database()
+        
+        pass
 
         
 

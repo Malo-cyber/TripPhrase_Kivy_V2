@@ -252,7 +252,6 @@ ScreenManager:
                 line_color: 0, 0, 0, 0
                 halign : 'center'
                 
-
             
         MDBottomNavigation:
             #color stuff
@@ -276,16 +275,16 @@ ScreenManager:
                 name: 'Home'
                 text: "Home"
                 icon: 'home'
- 
+
+                ScrollView:
+                    scroll_distance : 200
+                    id: scroll_view
+                
                     
             MDBottomNavigationItem:
                 name: 'screen 4'
                 text: "List"
                 icon: 'format-list-bulleted'
-                
-                ScrollView:
-                    scroll_distance : 200
-                    id: scroll_view
                 
             
             MDBottomNavigationItem:

@@ -1,3 +1,4 @@
 env/
 data/datasqlite3.db
 __pycache__/
+data/dbclass.sqlite

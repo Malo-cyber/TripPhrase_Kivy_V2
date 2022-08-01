@@ -1,61 +1,65 @@
-from ast import boolop
-from sqlite3 import dbapi2
-from context_manager import SQLite
-from db import Context, Phrase, User, Lang
 
 
+from dbclass import db_session, User, Lang
 
-DATAFILE = r"./data/datasqlite3.db"
+
 
 class Authenticator():
 
     isAuthenticate : bool
-    user_id : int
+    user : User
 
     @classmethod
-    def check_email(cls, email):
-        return User.check_email(email)
+    def check_email(cls, email, session):
+        """Check if email already exist or not in the sign in process"""
+        return User.get_by_email(email, session)
 
     @classmethod
-    def save_user(cls, user : User):
+    def save_user(cls, user : User, session):
         cls.isAuthenticate  = True
-        cls.user_id = user.save()
-        
+        cls.user = user
+        cls.user.id = user.save(session)
 
     @classmethod
-    def load_user(cls, email, password):
-        result = User.authenticate(email)
+    def load_user(cls, email, password, session):
+        result = User.get_by_email(email, session)
         if result:
             if result.password != password:
                 return False
             else : 
                 cls.isAuthenticate = True
-                cls.user_id = result.id
+                cls.user = result
                 return True
         else:
             return False
 
     @classmethod
-    def update_lang(cls, lang):
-        lang = Lang.get_lang_id(lang)
-        User.update_lang(cls.user_id, lang)
+    def update_lang(cls, lang, session):
+        lang_id = Lang.get_lang_id(lang,session )
+        User.update_lang(cls.user.id, lang_id, session)
 
     @classmethod
-    def update_curlang(cls, lang):
-        cls.user.currlang_id = Lang.get_lang_id(lang)
-        cls.user.update_currlang('currlang_id', cls.user.currlang_id)
+    def update_curlang(cls, lang, session):
+        cls.user.currlang_id = Lang.get_lang_id(lang, session)
+        cls.user.update_currlang(cls.user.id, cls.user.currlang_id, session)
 
     @classmethod
-    def get_user_name(cls):
-        result = User.get_user_by_id(cls.user_id)
+    def get_user(cls, session):
+        result = User.get_by_id(cls.user.id, session)
+        if result:
+            return result
+
+    @classmethod
+    def get_user_name(cls, session):
+        result = User.get_by_id(cls.user.id, session)
         if result:
             return result.username
 
     @classmethod    
-    def get_user_currlang(cls):
-        result = User.get_user_by_id(cls.user_id)
-        if result:
-            return result.currlang_id
+    def get_user_currlang(cls, session):
+        currlang = Lang.get_lang_by_id(cls.user.currlang_id, session)
+        return currlang
+            
 
 if __name__ == '__main__':
 

@@ -6,13 +6,29 @@ from sqlalchemy import ForeignKey, PrimaryKeyConstraint, create_engine, select, 
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
+from contextlib import contextmanager
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+
+db_url = """sqlite+pysqlite:///data/dbclass.sqlite"""
+
+@contextmanager
+def db_session(db_url):
+    """ Creates a context with an open SQLAlchemy session.
+    """
+    engine = create_engine(db_url, echo=True, future=True)
+    connection = engine.connect()
+    db_session = sessionmaker(bind=engine)
+    db_session = scoped_session(sessionmaker(autocommit=False, autoflush=True, bind=engine))
+    yield db_session
+    db_session.close()
+    connection.close()
 
 
-
-engine = create_engine("sqlite+pysqlite:///data/sqlalchemy.sqlite", echo=True, future=True)
 Base = declarative_base()
 
 class User(Base):
+
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
@@ -23,69 +39,35 @@ class User(Base):
     currlang_id = Column(String)
 
     def __init__(self, username, password, email, **kwargs):
+
         self.username = username
         self.password = password
         self.email = email
+
         for key, value in kwargs.items():
                 setattr(self, key, value)
          
-
     def __repr__(self):
         return f"User(id={self.id!r}, username={self.username!r}, password={self.password!r}, email={self.email!r},  lang_id={self.lang_id!r}"
 
-    def save(self):
-        Session = sessionmaker(bind=engine)
-        session = Session()
+    def save(self, session):
+        """Save the user and return its id"""
         session.add(self)
         session.commit()
-        for r in session.query(User).filter(User.id == self.id):
-            return r.id
+
+        return self.id
 
     @classmethod
-    def check_email(cls, email):
-        Session = sessionmaker(bind=engine)
-        session = Session()
-        result = session.query(User).filter(User.email == email)
-        for r in result:
-            if r:
-                return True
-            else:
-                return False
-    @classmethod
-    def authenticate(cls, email):
-        Session = sessionmaker(bind=engine)
-        session = Session()
+    def get_by_email(cls, email, session):
         result = session.query(User).filter(User.email == email)
         for r in result:
             if r:
                 return r
             else:
                 return False
-    @classmethod
-    def update_lang(cls, id, lang):
-        Session = sessionmaker(bind=engine)
-        session = Session()
-        session.execute(
-            update(User).
-            where(User.id == id).
-            values(lang_id = lang)
-        )
-        session.commit()
 
-    def update_currlang(self, value):
-        Session = sessionmaker(bind=engine)
-        session = Session()
-        session.execute(
-            update(User).
-            where(User.id == self.id).
-            values(currlang_id = value)
-        )
-        session.commit()
-        
     @classmethod
-    def get_user_by_id(cls, id):
-        Session = sessionmaker(bind=engine)
-        session = Session()
+    def get_by_id(cls, id, session):
         result = session.query(User).filter(User.id == id)
         for r in result:
             if r:
@@ -93,7 +75,25 @@ class User(Base):
             else:
                 return False
 
+    @classmethod
+    def update_lang(cls, id, lang, session):
+        session.execute(
+            update(User).
+            where(User.id == id).
+            values(lang_id = lang)
+        )
+        session.commit()
+
+    @classmethod
+    def update_currlang(cls, id, value, session):
+        session.execute(
+            update(User).
+            where(User.id == id).
+            values(currlang_id = value)
+        )
+        session.commit()
         
+
 
 class Lang(Base):
 
@@ -102,8 +102,6 @@ class Lang(Base):
     id = Column(String, primary_key = True)
     lang = Column(String)
     
-    
-
 
     def __init__(self, id, lang):
         self.id = id
@@ -113,139 +111,183 @@ class Lang(Base):
         return f"Lang(id={self.id!r}, lang={self.lang!r})"
 
     @classmethod
-    def get_lang_id(cls, lang):
-        Session = sessionmaker(bind=engine)
-        session = Session()
+    def get_lang_id(cls, lang, session):
         result = session.query(Lang).filter(Lang.lang == lang)
         for r in result:
             return r.id
 
     @classmethod
-    def get_lang_by_id(cls, lang_id):
-        Session = sessionmaker(bind=engine)
-        session = Session()
+    def get_lang_by_id(cls, lang_id, session):
+        
         result = session.query(Lang.lang).filter(Lang.id == lang_id)
         for r in result:
             return r.lang
+
     @classmethod
-    def all(cls):
-        Session = sessionmaker(bind=engine)
-        session = Session()
+    def all(cls, session):
+        
         result = session.query(Lang).all()
         return result
 
-class Context(Base):
 
-    __tablename__ = 'context'
+
+class Reference(Base):
+
+    __tablename__ = 'Reference'
 
     id = Column(Integer, primary_key = True)
-    context = Column(String)
-    phrase = relationship("Phrase")
+    context_id = Column(Integer)
 
-    def __init__(self, id, context):
-        self.id = id
-        self.context = context
+    def __init__(self, **kwargs):
+            self.context_id = 0
+            for key, value in kwargs.items():
+                    setattr(self, key, value)
 
-    def __repr__(self):
-        return f"Context(id={self.id!r}, context={self.context!r})"
-
-    def save(self):
-        Session = sessionmaker(bind=engine)
-        session = Session()
+    def save_return_id(self, session):
+        """ save and return id"""
         session.add(self)
         session.commit()
+        return self.id
+
 
     @classmethod
-    def get_context_id(cls, cont):
-        Session = sessionmaker(bind=engine)
-        session = Session()
-        result = session.query(Context).filter(Context.context == cont)
-        for r in result:
-            return r.id
-
-    @classmethod
-    def get_context_by_id(cls, id):
-        Session = sessionmaker(bind=engine)
-        session = Session()
-        result = session.query(Context).filter(Context.id == id)
-        for r in result:
-            return r.context
-
-    @classmethod
-    def all(cls):
-        Session = sessionmaker(bind=engine)
-        session = Session()
-        result = session.query(Context).all()
+    def get_ref_context(cls, context_id, session):
+        """Return all the reference of phrase in particular context"""
+        result = session.query(Reference).filter(Reference.context_id == context_id)
         return result
 
 
-
 class Phrase(Base):
+    """Class phrase and context"""
 
     __tablename__ = 'phrase'
 
     id = Column(Integer, primary_key = True)
     lang_id = Column(String, ForeignKey('lang.id'))
     content = Column(String)
-    context_id = Column(Integer, ForeignKey('context.id'))
-    trad_id = Column(Integer)
+    reference_id = Column(Integer)
 
     def __init__(self, **kwargs):
+
         for key, value in kwargs.items():
                 setattr(self, key, value)
 
     def __repr__(self):
-        lang = Lang.get_lang_by_id(self.lang_id)
-        context = Context.get_context_by_id(self.context_id)
-        return f"Phrase(id={self.id}, lang={lang}, content = {self.content}, context = {context}, trad_id = {self.trad_id})"
 
-    def save(self):
-        Session = sessionmaker(bind=engine)
-        session = Session()
+        lang = Lang.get_lang_by_id(self.lang_id)
+        return f"Phrase(id={self.id}, lang={lang}, content = {self.content}, trad_id = {self.reference_id})"
+
+    def save(self, session):
+
         session.add(self)
         session.commit()
 
-    def update(self, trad_id):
-        
-        Session = sessionmaker(bind=engine)
-        session = Session()
-        session.execute(
-            update(Phrase).
-            where(Phrase.id == f"{self.id}").
-            values(trad_id = trad_id)
-        )
-    
-    def get_trad(self, lang):
-        Session = sessionmaker(bind=engine)
-        session = Session()
-        lang_id = Lang.get_lang_id(lang)
-        return session.query(Phrase).filter(Phrase.trad_id == self.trad_id, Phrase.lang_id == lang_id )
+    def get_trad(self, lang, session):
+
+        return session.query(Phrase).filter(Phrase.reference_id == self.reference_id, Phrase.lang_id == lang ).scalar()
+             
 
     @classmethod
-    def get_context_lang_phrase_list(cls, context, lang):
-        Session = sessionmaker(bind=engine)
-        session = Session()
-        return session.query(Phrase).filter(Phrase.context_id == context, Phrase.lang_id == lang )
+    def get_context_lang(cls, lang_id, session):
+        """Return all the context in one language"""
+        
+        context_ref_all =  session.query(Reference.id).filter(Reference.context_id == 0).all()
+        context_id_all = [cont.id for cont in context_ref_all]
+        context_phrase = session.query(Phrase).filter(Phrase.reference_id.in_(context_id_all), Phrase.lang_id == lang_id)
 
+        return context_phrase
 
+    @classmethod
+    def get_phrase_context_lang(cls, context_ref_id, lang_id, session):
+        """return list of phrase select by context and lang"""
+
+        ref_context_all = session.query(Reference.id).filter(Reference.context_id == context_ref_id).all()
+        phrase_ref_id = [cont.id for cont in ref_context_all]
+        phrase_context_lang = session.query(Phrase).filter(Phrase.reference_id.in_(phrase_ref_id), Phrase.lang_id == lang_id).all()
+        
+        return phrase_context_lang
+
+engine = create_engine(db_url)
 Base.metadata.create_all(engine)
 
 
 if __name__ == '__main__':
 
-    user = User('malo','prout', 'password')
-    print(user.save())
-    """Session = sessionmaker(bind=engine)
+
+    """with db_session(db_url) as session:
+       
+        for cont in Phrase.get_context_lang('en', session):
+            print(cont.content)"""
+    """import json as js
+    lang_list = []
+
+    Session = sessionmaker(bind=engine)
     session = Session()
+
+    langues = {}
+
+    with open("./data/lang/langue.txt") as f:
+        langues = js.loads(f.read())
+
+    for key, value in langues.items():
+        lang = Lang(value, key)
+        session.add(lang)
+
+    session.commit()"""
+
+    """ref = Reference(context_id = 0)
+    id_ref = ref.save_return_id()
+    phrase = Phrase(lang_id = 'fr', content = 'Salutation', reference_id = id_ref)
+    phrase.save()
+    phrase = Phrase(lang_id = 'en', content = 'Welcome', reference_id = id_ref)
+    phrase.save()
+    ref = Reference(context_id = 1)
+    id_ref = ref.save_return_id()
+    phrase = Phrase(lang_id = 'fr', content = 'Bonjour', reference_id = id_ref)
+    phrase.save()
+    phrase = Phrase(lang_id = 'en', content = 'Hello', reference_id = id_ref)
+    phrase.save()
+    phrase = Phrase(lang_id = 'es', content = 'Hola', reference_id = id_ref)
+    phrase.save()
+    phrase = Phrase(lang_id = 'sl', content = 'Dober dan', reference_id = id_ref)
+    phrase.save()
+    ref = Reference(context_id = 0)
+    id_ref = ref.save_return_id()
+    phrase = Phrase(lang_id = 'fr', content = 'Se plaindre', reference_id = id_ref)
+    phrase.save()
+    phrase = Phrase(lang_id = 'en', content = 'Complain', reference_id = id_ref)
+    phrase.save()
+    phrase = Phrase(lang_id = 'es', content = 'Quejarse', reference_id = id_ref)
+    phrase.save()
+    ref = Reference(context_id = id_ref)
+    id_ref = ref.save_return_id()
+    phrase = Phrase(lang_id = 'fr', content = 'Putain', reference_id = id_ref)
+    phrase.save()
+    phrase = Phrase(lang_id = 'en', content = 'Fuck', reference_id = id_ref)
+    phrase.save()
+    phrase = Phrase(lang_id = 'es', content = 'Joder', reference_id = id_ref)
+    phrase.save()
+    phrase = Phrase(lang_id = 'sl', content = 'Kurba', reference_id = id_ref)
+    phrase.save()
+    phrase = Phrase(lang_id = 'fi', content = 'Perquele', reference_id = id_ref)
+    phrase.save()
+    """
+    
+    
+    """result = Phrase.get_context_lang_phrase(3, 'fr')
+    for r in result :   
+        print(r)
+    """
+
+    """result = Reference.get_ref_context(1)
+    for r in result:
+        print(result)"""
+
+    
+    
     
 
-    result = session.query(User).all()
-    for r in result:
-        r.update_lang('sl')
-        
-    pass"""
-    """ import json as js
-    lang_list = []
+    """
 
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -306,7 +348,7 @@ if __name__ == '__main__':
            
 
     create_instance()
-"""
+    """
     """result = Context.get_context_by_id(id = 3)
     print(result)
     result = Context.get_context_id('Remerciement')
@@ -323,7 +365,5 @@ if __name__ == '__main__':
     for phrase in Phrase.get_context_lang_phrase_list(4, 'fr'):
         print(phrase)
         for r in phrase.get_trad('Slovenian'):
-            print(r)"""
-
-    
-    
+            print(r)
+            """

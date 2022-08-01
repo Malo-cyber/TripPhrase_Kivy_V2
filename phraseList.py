@@ -1,8 +1,11 @@
 
 from ast import IsNot
+from multiprocessing import context
 from kivymd.uix.list import OneLineListItem, MDList, TwoLineListItem
 import sqlite3
-from db import Context, Phrase, User, Lang
+from dbclass import db_session, Phrase
+
+db_url = """sqlite+pysqlite:///data/dbclass.sqlite"""
 
 class PhraseList(MDList):
 
@@ -17,7 +20,7 @@ class PhraseList(MDList):
         self.gen_contextItems()
 
     def context_callback(self, text):
-        self.current_context = text
+        self.current_context = self.contexts[f'{text}']
         self.clear()
         self.gen_listItem()
        
@@ -30,39 +33,39 @@ class PhraseList(MDList):
         self.clear_widgets()
     
     def gen_contextItems(self):
-        for cont in Context.all():
-            list_item = ButtonContext(
-                text = cont.context
-            )
-            self.add_widget(list_item)
+        self.contexts = {}
+        with db_session(db_url) as session:
+            for cont in Phrase.get_context_lang(self.lang_src, session):
+                self.contexts[f'{cont.content}'] = cont.reference_id
+                list_item = ButtonContext(
+                    text = cont.content,
+                )
+                self.add_widget(list_item)
             
     def gen_listItem(self):
-        context = Context.get_context_id(self.current_context)
-        lang = Lang.get_lang_id(self.lang_src)
+        context = self.current_context
+        lang = self.lang_src
 
-        phrase_list = Phrase.get_context_lang_phrase_list(context, lang)
+        with db_session(db_url) as session:
+            phrase_list = Phrase.get_phrase_context_lang(context, lang, session)
 
-        retourButton = ReturnButton(
-                text = 'retour'
-            )
-        self.add_widget(retourButton)
+            retourButton = ReturnButton(
+                    text = 'retour'
+                )
+            self.add_widget(retourButton)
 
-        for phrase in phrase_list:
-            traduction = phrase.get_trad(self.lang_trg)
-            for trad in traduction:
+            for phrase in phrase_list:
+                traduction = phrase.get_trad(self.lang_trg, session)
                 phrase_button = ButtonPhrase(
                     text = phrase.content,
-                    secondary_text = trad.content
+                    secondary_text = traduction.content
                 )
-                if traduction.phrase_id == '':
-                    del traduction
-        
-            self.add_widget(phrase_button)
+                self.add_widget(phrase_button)
 
-        retourButton = ReturnButton(
-            text = 'retour'
-        )
-        self.add_widget(retourButton)
+            retourButton = ReturnButton(
+                text = 'retour'
+            )
+            self.add_widget(retourButton)
             
             
 

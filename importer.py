@@ -1,4 +1,4 @@
-from dataclass import Traduction, Phrase
+from dbclass import *
 
 class Importer:
     
