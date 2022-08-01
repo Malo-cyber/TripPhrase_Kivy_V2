@@ -2,7 +2,6 @@
 from ast import IsNot
 from kivymd.uix.list import OneLineListItem, MDList, TwoLineListItem
 import sqlite3
-from dataclass import Traduction, Phrase
 from db import Context, Phrase, User, Lang
 
 class PhraseList(MDList):
@@ -35,10 +34,13 @@ class PhraseList(MDList):
             list_item = ButtonContext(
                 text = cont.context
             )
-            #self.add_widget(list_item)
-            print(cont.context)
+            self.add_widget(list_item)
+            
     def gen_listItem(self):
-        phrase_list = self.get_context_lang_phrase_list(self.current_context, self.lang_src)
+        context = Context.get_context_id(self.current_context)
+        lang = Lang.get_lang_id(self.lang_src)
+
+        phrase_list = Phrase.get_context_lang_phrase_list(context, lang)
 
         retourButton = ReturnButton(
                 text = 'retour'
@@ -47,12 +49,13 @@ class PhraseList(MDList):
 
         for phrase in phrase_list:
             traduction = phrase.get_trad(self.lang_trg)
-            phrase_button = ButtonPhrase(
-                text = phrase.content,
-                secondary_text = traduction.content
-            )
-            if traduction.phrase_id == '':
-                del traduction
+            for trad in traduction:
+                phrase_button = ButtonPhrase(
+                    text = phrase.content,
+                    secondary_text = trad.content
+                )
+                if traduction.phrase_id == '':
+                    del traduction
         
             self.add_widget(phrase_button)
 
@@ -62,15 +65,6 @@ class PhraseList(MDList):
         self.add_widget(retourButton)
             
             
-        
-
-    def get_context_lang_phrase_list(self, context, lang):
-        phrase_list = []
-        for phrase in Phrase :
-            if (phrase.context == context) & (phrase.lang == lang):
-                phrase_list.append(phrase)
-            
-        return phrase_list
 
 
 class ButtonContext(OneLineListItem):

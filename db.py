@@ -19,17 +19,81 @@ class User(Base):
     username = Column(String(30))
     password = Column(String)
     email = Column(String)
-    lang_id = Column(String, ForeignKey('lang.id'))
+    lang_id = Column(String)
+    currlang_id = Column(String)
 
-    def __init__(self, username, password, email, lang_id):
+    def __init__(self, username, password, email, **kwargs):
         self.username = username
         self.password = password
         self.email = email
-        self.lang_id = lang_id    
+        for key, value in kwargs.items():
+                setattr(self, key, value)
+         
 
     def __repr__(self):
         return f"User(id={self.id!r}, username={self.username!r}, password={self.password!r}, email={self.email!r},  lang_id={self.lang_id!r}"
 
+    def save(self):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        session.add(self)
+        session.commit()
+        for r in session.query(User).filter(User.id == self.id):
+            return r.id
+
+    @classmethod
+    def check_email(cls, email):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        result = session.query(User).filter(User.email == email)
+        for r in result:
+            if r:
+                return True
+            else:
+                return False
+    @classmethod
+    def authenticate(cls, email):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        result = session.query(User).filter(User.email == email)
+        for r in result:
+            if r:
+                return r
+            else:
+                return False
+    @classmethod
+    def update_lang(cls, id, lang):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        session.execute(
+            update(User).
+            where(User.id == id).
+            values(lang_id = lang)
+        )
+        session.commit()
+
+    def update_currlang(self, value):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        session.execute(
+            update(User).
+            where(User.id == self.id).
+            values(currlang_id = value)
+        )
+        session.commit()
+        
+    @classmethod
+    def get_user_by_id(cls, id):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        result = session.query(User).filter(User.id == id)
+        for r in result:
+            if r:
+                return r
+            else:
+                return False
+
+        
 
 class Lang(Base):
 
@@ -37,7 +101,9 @@ class Lang(Base):
 
     id = Column(String, primary_key = True)
     lang = Column(String)
-    user = relationship("User")
+    
+    
+
 
     def __init__(self, id, lang):
         self.id = id
@@ -61,6 +127,12 @@ class Lang(Base):
         result = session.query(Lang.lang).filter(Lang.id == lang_id)
         for r in result:
             return r.lang
+    @classmethod
+    def all(cls):
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        result = session.query(Lang).all()
+        return result
 
 class Context(Base):
 
@@ -147,14 +219,13 @@ class Phrase(Base):
         Session = sessionmaker(bind=engine)
         session = Session()
         lang_id = Lang.get_lang_id(lang)
-        return session.query(Phrase).filter(Phrase.trad_id == self.trad_id and Phrase.lang_id == lang_id )
+        return session.query(Phrase).filter(Phrase.trad_id == self.trad_id, Phrase.lang_id == lang_id )
 
     @classmethod
     def get_context_lang_phrase_list(cls, context, lang):
         Session = sessionmaker(bind=engine)
         session = Session()
-        lang_id = Lang.get_lang_id(lang)
-        return session.query(Phrase).filter(Phrase.trad_id == self.trad_id and Phrase.lang_id == lang_id )
+        return session.query(Phrase).filter(Phrase.context_id == context, Phrase.lang_id == lang )
 
 
 Base.metadata.create_all(engine)
@@ -162,7 +233,18 @@ Base.metadata.create_all(engine)
 
 if __name__ == '__main__':
 
-    """import json as js
+    user = User('malo','prout', 'password')
+    print(user.save())
+    """Session = sessionmaker(bind=engine)
+    session = Session()
+    
+
+    result = session.query(User).all()
+    for r in result:
+        r.update_lang('sl')
+        
+    pass"""
+    """ import json as js
     lang_list = []
 
     Session = sessionmaker(bind=engine)
@@ -223,8 +305,8 @@ if __name__ == '__main__':
             trad_id +=1
            
 
-    create_instance()"""
-
+    create_instance()
+"""
     """result = Context.get_context_by_id(id = 3)
     print(result)
     result = Context.get_context_id('Remerciement')
@@ -237,5 +319,11 @@ if __name__ == '__main__':
 
     """for cont in Context.all():
         print(cont)"""
+    """phrases = []
+    for phrase in Phrase.get_context_lang_phrase_list(4, 'fr'):
+        print(phrase)
+        for r in phrase.get_trad('Slovenian'):
+            print(r)"""
 
-     
+    
+    
