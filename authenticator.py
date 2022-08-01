@@ -1,8 +1,8 @@
-from ast import boolop
-from context_manager import SQLite
-from dataclass import User
 
-DATAFILE = r"./data/datasqlite3.db"
+
+from dbclass import db_session, User, Lang
+
+
 
 class Authenticator():
 
@@ -10,91 +10,57 @@ class Authenticator():
     user : User
 
     @classmethod
-    def check_email(cls, user : User):
-        with SQLite(file_name=DATAFILE) as cur:
-            result = cur.execute(f"""
-                SELECT email FROM users
-                WHERE email = "{user.email}"
-            """).fetchone()
-        if result != None:
-            return False
-        else:
-            return True
+    def check_email(cls, email, session):
+        """Check if email already exist or not in the sign in process"""
+        return User.get_by_email(email, session)
 
     @classmethod
-    def save_user(cls, user : User):
-        with SQLite(file_name=DATAFILE) as cur:
-            cur.execute('INSERT INTO users VALUES(:username, :email, :password, :lang, :favorite, :cur_lang)',
-            {
-                'username' : user.username,
-                'email' : user.email,
-                'password': user.password,
-                'lang' : user.lang,
-                'favorite' : user.favorite,
-                'cur_lang' : user.current_lang
-            }
-        )
+    def save_user(cls, user : User, session):
         cls.isAuthenticate  = True
         cls.user = user
+        cls.user.id = user.save(session)
 
     @classmethod
-    def load_user(cls, user : User):
-        with SQLite(file_name=DATAFILE) as cur:
-            result = cur.execute(f"""
-                SELECT * FROM users
-                WHERE email = "{user.email}"
-            """).fetchone()
+    def load_user(cls, email, password, session):
+        result = User.get_by_email(email, session)
         if result:
-            if result[2] != user.password:
+            if result.password != password:
                 return False
             else : 
                 cls.isAuthenticate = True
-                cls.user = User(username = result[0], email = result[1], password = [2], favorite = result[3], lang = result[4], current_lang = result[5])
+                cls.user = result
                 return True
         else:
             return False
 
     @classmethod
-    def update_lang(cls, lang):
-        cls.user.lang = lang
-        with SQLite(file_name=DATAFILE) as cur:
-            cur.execute(f"""
-                UPDATE users 
-                SET lang = '{lang}'
-                WHERE email = "{cls.user.email}"
-             """)
+    def update_lang(cls, lang, session):
+        lang_id = Lang.get_lang_id(lang,session )
+        User.update_lang(cls.user.id, lang_id, session)
 
     @classmethod
-    def update_curlang(cls, lang):
-        cls.user.current_lang = lang
-        with SQLite(file_name=DATAFILE) as cur:
-            cur.execute(f"""
-                UPDATE users 
-                SET cur_lang = '{lang}'
-                WHERE email = "{cls.user.email}"
-             """)
+    def update_curlang(cls, lang, session):
+        cls.user.currlang_id = Lang.get_lang_id(lang, session)
+        cls.user.update_currlang(cls.user.id, cls.user.currlang_id, session)
 
+    @classmethod
+    def get_user(cls, session):
+        result = User.get_by_id(cls.user.id, session)
+        if result:
+            return result
 
+    @classmethod
+    def get_user_name(cls, session):
+        result = User.get_by_id(cls.user.id, session)
+        if result:
+            return result.username
 
+    @classmethod    
+    def get_user_currlang(cls, session):
+        currlang = Lang.get_lang_by_id(cls.user.currlang_id, session)
+        return currlang
+            
 
 if __name__ == '__main__':
 
-    user = User(username = 'Malo', email = 'm.couvet@icloud.com')
-
-    with SQLite(file_name=DATAFILE) as cur:
-        cur.execute('INSERT INTO users VALUES(:username, :email, :password, :lang, :favorite, :cur_lang)',
-            {
-                'username' : user.username,
-                'email' : user.email,
-                'password': user.password,
-                'lang' : user.lang,
-                'favorite' : user.favorite,
-                'cur_lang' : user.current_lang
-            }
-        )
-
-
-    if Authenticator.check_email(user):
-        print('email disponible')
-    else :
-        print('already exist')
+    pass
