@@ -9,6 +9,128 @@ ScreenManager:
         name: 'profil'
     SelectLangPopUp:
         name: 'langpopup'
+    AddContext:
+        name: 'add_context'
+    UpdateContext:
+        name: 'update_context'
+
+<UpdateContext>:
+    MDCard:
+        size_hint: None, None
+        size: 1000, 1000
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDLabel:
+            id: add_context
+            text: "Add a new context "
+            font_size: 40
+            halign: 'center'
+            size_hint_y: 0.2
+            height: self.texture_size[1]
+            padding_y: 5
+
+        MDRaisedButton:
+            id: src_context_button
+            text: "Select the context to traduct"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: root.src_context.open()
+
+
+        MDRaisedButton:
+            id: trg_lang_button
+            text: "Select the language you'll traduct in"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: root.trg_lang.open()
+
+        MDTextField:
+            id: trg_content
+            mode : 'rectangle'
+            multiline: False
+            hint_text: "traduction of the context"
+            size_hint_x: None
+            width: 550
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            write_tab: False    
+
+        MDRoundFlatButton:
+            text: "SUBMIT"
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            on_press: root.submit()
+
+
+        Widget:
+            size_hint_y: None
+            height: 10  
+
+<AddContext>:
+    MDCard:
+        size_hint: None, None
+        size: 1000, 1000
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDLabel:
+            id: add_context
+            text: "Add a new context "
+            font_size: 40
+            halign: 'center'
+            size_hint_y: 0.2
+            height: self.texture_size[1]
+            padding_y: 5
+
+        MDRaisedButton:
+            id: src_lang_button
+            text: "Select the source language"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: root.src_lang.open()
+
+        MDTextField:
+            id: src_content
+            mode : 'rectangle'
+            multiline: False
+            hint_text: "type your new context here"
+            size_hint_x: None
+            width: 550
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            write_tab: False
+
+        MDRaisedButton:
+            id: trg_lang_button
+            text: "Select the source language"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: root.trg_lang.open()
+
+        MDTextField:
+            id: trg_content
+            mode : 'rectangle'
+            multiline: False
+            hint_text: "traduct your content at least in english"
+            size_hint_x: None
+            width: 550
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            write_tab: False    
+
+        MDRoundFlatButton:
+            text: "SUBMIT"
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            on_press: root.submit()
+
+
+        Widget:
+            size_hint_y: None
+            height: 10  
 
 <ProfilScreen>:
     MDCard:
@@ -277,9 +399,16 @@ ScreenManager:
                 text: "Home"
                 icon: 'home'
                 id : nav_home
-                ScrollView:
-                    scroll_distance : 200
-                    id: scroll_view
+
+                PhraseScrollView:
+                    id : phrase_scroll_view
+                
+                AddContextButton:
+                    id : addcontextbutton
+                    data: self.opt
+                    root_button_anim: True
+                    
+                    
 
                     
             MDBottomNavigationItem:
@@ -324,3 +453,6 @@ ScreenManager:
 
 <AddContextButton>:
     callback : app.add_context_callback
+
+<PhraseScrollView>:
+  

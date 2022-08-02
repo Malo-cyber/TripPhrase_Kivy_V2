@@ -19,7 +19,7 @@ def db_session(db_url):
     engine = create_engine(db_url, echo=True, future=True)
     connection = engine.connect()
     db_session = sessionmaker(bind=engine)
-    db_session = scoped_session(sessionmaker(autocommit=False, autoflush=True, bind=engine))
+    db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
     yield db_session
     db_session.close()
     connection.close()
