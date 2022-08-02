@@ -256,6 +256,7 @@ ScreenManager:
         MDBottomNavigation:
             #color stuff
             #panel_color: 0,0,1,1
+            id : nav
 
             MDBottomNavigationItem:
                 name: 'screen 1'
@@ -275,11 +276,11 @@ ScreenManager:
                 name: 'Home'
                 text: "Home"
                 icon: 'home'
-
+                id : nav_home
                 ScrollView:
                     scroll_distance : 200
                     id: scroll_view
-                
+
                     
             MDBottomNavigationItem:
                 name: 'screen 4'
@@ -321,3 +322,5 @@ ScreenManager:
 <ReturnButton>:
     on_press : self.parent.retour_callback()
 
+<AddContextButton>:
+    callback : app.add_context_callback

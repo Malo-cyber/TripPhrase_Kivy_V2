@@ -1,4 +1,5 @@
 import json as js
+from turtle import onclick
 
 from kivy.lang import Builder
 from kivymd.app import MDApp
@@ -8,6 +9,7 @@ from importer import Importer
 from authenticator import Authenticator
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.card import MDCard
+from kivymd.uix.button import MDFloatingActionButtonSpeedDial
 
 from dbclass import db_session, User, Phrase, Lang
 
@@ -18,7 +20,21 @@ class HomeScreen(Screen):
     
 
     def on_enter(self, *args):
+        self.ids.nav.switch_tab('Home')
+        opt =  {
+        'Add a new context': 'plus',
+        'Traduct an existing context in an other lang': 'border-color',
+        }
+        add_context_button = AddContextButton(
+            data = opt,
+            pos_hint={"center_x": .9, "center_y": .1},
+            root_button_anim = True
+        )
+
+        self.ids.nav_home.add_widget(add_context_button)
         self.update()
+        
+    
         
 
     def update(self):
@@ -43,6 +59,9 @@ class HomeScreen(Screen):
             
     def callback(self, txt):
         pass
+
+class AddContextButton(MDFloatingActionButtonSpeedDial):
+    pass
 
 class SelectLangPopUp(Screen):
 
@@ -188,8 +207,11 @@ class MainApp(MDApp):
         Traduction.DBall()"""
         
     
-    def callback(self):
-        print(self.txt)
+    def add_context_callback(self, instance):
+        if instance.icon == 'plus':
+            self.manager.current = 'add'
+        elif instance.icon == 'border-color':
+            pass
 
 if __name__ == '__main__':
     
