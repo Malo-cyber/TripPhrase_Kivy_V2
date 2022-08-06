@@ -37,12 +37,15 @@ class User(Base):
     email = Column(String)
     lang_id = Column(String)
     currlang_id = Column(String)
+    
+    current_context = ''
 
     def __init__(self, username, password, email, **kwargs):
 
         self.username = username
         self.password = password
         self.email = email
+        
 
         for key, value in kwargs.items():
                 setattr(self, key, value)
@@ -214,6 +217,10 @@ Base.metadata.create_all(engine)
 if __name__ == '__main__':
 
 
+    with db_session(db_url) as session:
+        user = User.get_by_id(5, session)
+        user.current_context = 'Presentation'
+        print(user.current_context)
     """with db_session(db_url) as session:
        
         for cont in Phrase.get_context_lang('en', session):

@@ -1,9 +1,10 @@
 
-from kivymd.uix.button import MDFloatingActionButton
+
 from multiprocessing import context
 from kivymd.uix.list import OneLineListItem, MDList, TwoLineListItem
 import sqlite3
 from dbclass import db_session, Phrase
+from authenticator import Authenticator
 
 db_url = """sqlite+pysqlite:///data/dbclass.sqlite"""
 
@@ -21,11 +22,16 @@ class PhraseList(MDList):
 
     def context_callback(self, text):
         self.current_context = self.contexts[f'{text}']
+        Authenticator.user.current_context = text
+        print(Authenticator.user.current_context)
+        self.parent.parent.parent.parent.parent.parent.update_curr_context()
         self.clear()
         self.gen_listItem()
        
     def retour_callback(self):
         self.current_context = None
+        Authenticator.user.current_context = ''
+        self.parent.parent.parent.parent.parent.parent.update_curr_context()
         self.clear()
         self.gen_contextItems()
 

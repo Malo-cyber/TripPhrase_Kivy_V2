@@ -13,6 +13,80 @@ ScreenManager:
         name: 'add_context'
     UpdateContext:
         name: 'update_context'
+    AddPhrase:
+        name: 'add_phrase'
+
+<AddPhrase>
+    MDCard:
+        size_hint: None, None
+        size: 1000, 1000
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        elevation: 10
+        padding: 25
+        spacing: 25
+        orientation: 'vertical'
+
+        MDLabel:
+            id: add_phrase
+            text: "Add a new phrase "
+            font_size: 40
+            halign: 'center'
+            size_hint_y: 0.2
+            height: self.texture_size[1]
+            padding_y: 5
+
+        MDRaisedButton:
+            id: src_context_button
+            text: ""
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: root.src_context.open()
+
+        MDRaisedButton:
+            id: src_lang_button
+            text: ""
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: root.src_lang.open()
+
+        MDTextField:
+            id: src_content 
+            mode : 'rectangle'
+            multiline: False
+            hint_text: "Write your phrase here"
+            size_hint_x: None
+            width: 550
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            write_tab: False 
+
+        MDRaisedButton:
+            id: trg_lang_button
+            text: ""
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_release: root.trg_lang.open()
+
+        MDTextField:
+            id: trg_content
+            mode : 'rectangle'
+            multiline: False
+            hint_text: "Write the traduction here"
+            size_hint_x: None
+            width: 550
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            write_tab: False    
+        
+        MDRoundFlatButton:
+            text: "SUBMIT"
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            on_press: root.submit()
+
+        MDRoundFlatButton:
+            text: "RETURN"
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            on_press: root.manager.current = 'home'
+
 
 <UpdateContext>:
     MDCard:
@@ -63,10 +137,11 @@ ScreenManager:
             pos_hint: {"center_x": 0.5}
             on_press: root.submit()
 
-
-        Widget:
-            size_hint_y: None
-            height: 10  
+        MDRoundFlatButton:
+            text: "RETURN"
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            on_press: root.manager.current = 'home'
 
 <AddContext>:
     MDCard:
@@ -106,7 +181,7 @@ ScreenManager:
 
         MDRaisedButton:
             id: trg_lang_button
-            text: "Select the source language"
+            text: "Select the target language"
             pos_hint: {"center_x": .5, "center_y": .5}
             on_release: root.trg_lang.open()
 
@@ -127,10 +202,11 @@ ScreenManager:
             pos_hint: {"center_x": 0.5}
             on_press: root.submit()
 
-
-        Widget:
-            size_hint_y: None
-            height: 10  
+        MDRoundFlatButton:
+            text: "RETURN"
+            font_size: 20
+            pos_hint: {"center_x": 0.5}
+            on_press: root.manager.current = 'home'
 
 <ProfilScreen>:
     MDCard:
@@ -356,6 +432,10 @@ ScreenManager:
             id : tool_bar
             title : 'Trip Phrase'
 
+            MDLabel:
+                id : curr_context
+                text : ''
+                valign : 'center'
 
             MDLabel:
                 id: logged

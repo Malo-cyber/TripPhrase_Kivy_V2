@@ -24,6 +24,7 @@ class HomeScreen(Screen):
         self.ids.nav.switch_tab('Home')
         self.ids.addcontextbutton.close_stack()
         self.update()
+        self.update_curr_context()
 
     def update(self):
         if Authenticator.isAuthenticate:
@@ -42,6 +43,8 @@ class HomeScreen(Screen):
                         
                 else : 
                     self.manager.current = 'langpopup'
+    def update_curr_context(self):
+        self.ids.curr_context.text = str(Authenticator.user.current_context)
 
     def select_lang_trg(self):
         self.manager.current = 'langpopup'
@@ -57,8 +60,11 @@ class AddContextButton(MDFloatingActionButtonSpeedDial):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.opt = {
+                'Add new phrase ' : 'plus-circle',
+                'Traduct an existing phrase' : 'pen',
                 'Add a new context': 'plus',
                 'Traduct an existing context in an other lang': 'border-color',
+                
             }
     
 
@@ -223,9 +229,97 @@ class UpdateContext(Screen):
             context.save(session)
             self.manager.current = 'home'
 
+class AddPhrase(Screen):
+
+    def on_leave(self):
+        self.ids.src_content.text = ''
+        self.ids.trg_content.text = ''
+
+    def on_enter(self, **kwargs):
+        lang_id = Authenticator.user.lang_id
+        currlang_id = Authenticator.user.currlang_id
+        with db_session(db_url) as session:
+            self.lang_items = [
+                {
+                    "text": f"{lang.lang}",
+                    "viewclass": "OneLineListItem",
+                    "on_release": lambda x= f"{lang.lang}" : self.src_lang_callback(x),
+                } for lang in Lang.all(session)
+            ]
+            self.src_lang = MDDropdownMenu(
+                caller = self.ids.src_lang_button,
+                items=self.lang_items,
+                width_mult=4,
+            )
+            self.ids.src_lang_button.text = Lang.get_lang_by_id(lang_id, session)
+
+            self.trg_lang = MDDropdownMenu(
+                caller = self.ids.trg_lang_button,
+                items=self.lang_items,
+                width_mult=4,
+            )
+            self.ids.trg_lang_button.text = Lang.get_lang_by_id(currlang_id, session)
+
+            self.context_items = [
+                {
+                    "text": f"{phrase.content}",
+                    "viewclass": "OneLineListItem",
+                    "on_release": lambda x= f"{phrase.content}" : self.src_context_callback(x),
+                } for phrase in Phrase.get_context_lang(lang_id,session)
+            ]
+            self.src_context = MDDropdownMenu(
+                caller = self.ids.src_context_button,
+                items=self.context_items,
+                width_mult=4,
+            )
+            try:
+                if Authenticator.user.current_context != '':
+                    self.ids.src_context_button.text = Authenticator.user.current_context
+            except:
+                self.ids.src_context_button.text = 'Select the context'
+    
+    def src_context_callback(self, lang):
+        self.ids.src_context_button.text = lang
+        self.src_context.dismiss()
+
+    def trg_lang_callback(self, lang):
+        self.ids.trg_lang_button.text = lang
+        self.trg_lang.dismiss()
+
+    def src_lang_callback(self, lang):
+        self.ids.src_lang_button.text = lang
+        self.src_lang.dismiss()
+
+    def submit(self):
+        with db_session(db_url) as session :
+            src_lang = self.ids.src_lang_button.text
+            src_content = self.ids.src_content.text
+            trg_lang = self.ids.trg_lang_button.text
+            trg_content = self.ids.trg_content.text
+            context_content = self.ids.src_context_button.text
+
+            src_lang_id = Lang.get_lang_id(src_lang, session)
+            trg_lang_id = Lang.get_lang_id(trg_lang, session)
+
+            context_id = session.query(Phrase.reference_id).filter(Phrase.content == context_content, Phrase.lang_id == src_lang_id ).one()[0]
+            ref = Reference(context_id = context_id)
+            ref_id = ref.save_return_id(session)
+        with db_session(db_url) as session :
+            phrase_src = Phrase(lang_id = src_lang_id, content = src_content, reference_id = ref_id)
+            phrase_src.save(session)
+        with db_session(db_url) as session :
+            phrase_trg = Phrase(lang_id = trg_lang_id, content = trg_content, reference_id = ref_id)
+            phrase_trg.save(session)
+            self.manager.current = 'home'
+
+    
+
 class AddContext(Screen):
 
     def on_enter(self, **kwargs):
+        lang_id = Authenticator.user.lang_id
+        currlang_id = Authenticator.user.currlang_id
+
         with db_session(db_url) as session:
             self.src_lang_items = [
                 {
@@ -252,6 +346,9 @@ class AddContext(Screen):
                 items=self.trg_lang_items,
                 width_mult=4,
             )
+
+            self.ids.src_lang_button.text = Lang.get_lang_by_id(lang_id, session)
+            self.ids.trg_lang_button.text = Lang.get_lang_by_id(currlang_id, session)
         
     def src_lang_callback(self, lang):
         self.ids.src_lang_button.text = lang
@@ -296,7 +393,8 @@ class MainApp(MDApp):
         sm.add_widget(SelectLangPopUp(name='langpopup'))
         sm.add_widget(AddContext(name='add_context'))
         sm.add_widget(UpdateContext(name='update_context'))
-        
+        sm.add_widget(AddPhrase(name='add_phrase'))
+
         #Set the color theme and palette
         self.theme_cls.theme_style = "Green"
         self.theme_cls.primary_palette = "White"
@@ -324,6 +422,8 @@ class MainApp(MDApp):
             self.root.current = 'add_context'
         elif instance.icon == 'border-color':
             self.root.current = 'update_context'
+        elif instance.icon == 'plus-circle':
+            self.root.current = 'add_phrase'
             
         
 
