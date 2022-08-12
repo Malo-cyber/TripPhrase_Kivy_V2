@@ -37,7 +37,7 @@ class User(Base):
     email = Column(String)
     lang_id = Column(String)
     currlang_id = Column(String)
-    
+
     current_context = ''
 
     def __init__(self, username, password, email, **kwargs):
@@ -217,30 +217,26 @@ Base.metadata.create_all(engine)
 if __name__ == '__main__':
 
 
-    with db_session(db_url) as session:
-        user = User.get_by_id(5, session)
-        user.current_context = 'Presentation'
-        print(user.current_context)
     """with db_session(db_url) as session:
        
         for cont in Phrase.get_context_lang('en', session):
             print(cont.content)"""
-    """import json as js
+    import json as js
     lang_list = []
 
-    Session = sessionmaker(bind=engine)
-    session = Session()
+   
 
     langues = {}
 
     with open("./data/lang/langue.txt") as f:
         langues = js.loads(f.read())
 
-    for key, value in langues.items():
-        lang = Lang(value, key)
-        session.add(lang)
+    with db_session(db_url) as session : 
+        for key, value in langues.items():
+            lang = Lang(value, key)
+            session.add(lang)
+        session.commit()
 
-    session.commit()"""
 
     """ref = Reference(context_id = 0)
     id_ref = ref.save_return_id()

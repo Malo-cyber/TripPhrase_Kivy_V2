@@ -1,18 +1,8 @@
-import json as js
-from turtle import onclick
-
-from kivy.lang import Builder
-from kivymd.app import MDApp
 from phraseList import PhraseList
-from kivy.uix.screenmanager import Screen, ScreenManager
-from importer import Importer
-from authenticator import Authenticator
-from kivymd.uix.menu import MDDropdownMenu
-from kivymd.uix.card import MDCard
-from kivymd.uix.button import MDFloatingActionButtonSpeedDial
-from kivy.uix.scrollview import ScrollView
+from kivy.uix.screenmanager import Screen
 
-from dbclass import Reference, db_session, User, Phrase, Lang
+from authenticator import Authenticator
+from dbclass import db_session
 
 
 db_url = """sqlite+pysqlite:///data/dbclass.sqlite"""
@@ -43,6 +33,7 @@ class HomeScreen(Screen):
                         
                 else : 
                     self.manager.current = 'langpopup'
+                    
     def update_curr_context(self):
         self.ids.curr_context.text = str(Authenticator.user.current_context)
 

@@ -13,14 +13,14 @@ from kivymd.uix.button import MDFloatingActionButtonSpeedDial
 from kivy.uix.scrollview import ScrollView
 
 from dbclass import Reference, db_session, User, Phrase, Lang
-from homescreen import HomeScreen
-from selectlangpopup import SelectLangPopUp
-from signin import SignInScreen
-from login import LoginScreen
-from profil import ProfilScreen
-from updatecontext import UpdateContext
-from addphrase import AddPhrase
-from addcontext import AddContext
+from screen.homescreen import HomeScreen
+from screen.selectlangpopup import SelectLangPopUp
+from screen.signin import SignInScreen
+from screen.login import LoginScreen
+from screen.profil import ProfilScreen
+from screen.updatecontext import UpdateContext
+from screen.addphrase import AddPhrase
+from screen.addcontext import AddContext
 
 db_url = """sqlite+pysqlite:///data/dbclass.sqlite"""
 
